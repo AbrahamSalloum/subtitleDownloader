@@ -29,7 +29,7 @@
             </Grid.ColumnDefinitions>
             <ComboBox  Name="FeatTypeCombo" Grid.Row="0" Grid.Column="0"></ComboBox>
             <ComboBox Name="LangTypeCombo" Grid.Row="0" Grid.Column="1"></ComboBox>
-            <Button Grid.Row="0" Grid.Column="2">Options</Button>
+            <Button Grid.Row="0" Grid.Column="2" Click="Button_Click_1">Options</Button>
         </Grid>
         <Grid Grid.Row="2" Name="StatusTextGrid" Visibility="Collapsed">
             <TextBox Name="StatusText" Visibility="Hidden" Text="No Results"/>

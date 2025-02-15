@@ -57,12 +57,12 @@ namespace subsl.Services
             {
                 if (item.GetValue(SearchBoxInput) != null)
                 {
-                    qqueryparam += $"{item.Name}={item.GetValue(SearchBoxInput)}&";
+                    qqueryparam += $"&{item.Name}={item.GetValue(SearchBoxInput)}";
                 } 
             }
 
 
-            HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Get, $"https://{_BaseURL}/api/v1/subtitles?{qqueryparam}&");
+            HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Get, $"https://{_BaseURL}/api/v1/subtitles?{qqueryparam}");
 
             msg.Headers.Add("User-Agent", $"as123");
             msg.Headers.Add("Api-key", $"{_ApiKey}");

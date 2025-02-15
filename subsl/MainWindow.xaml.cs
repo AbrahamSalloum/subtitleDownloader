@@ -40,7 +40,7 @@ namespace subsl
             LoginInput creds = new LoginInput();
             //creds.username = "user";
             //creds.password = "pass";
-            //creds.apikey = <123>
+            //creds.apikey = "fake";
 
             OpenSubtitlesAPI subs = new OpenSubtitlesAPI(creds);
             //LoginOutput Logindetails =  await subs.Login();
@@ -116,6 +116,12 @@ namespace subsl
         {
             if(CurrentSelected?.attributes?.subtitle_id != null)
                 MessageBox.Show(CurrentSelected.attributes.subtitle_id);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            OptionsWindow options = new OptionsWindow();
+            options.Show();
         }
     }
 
