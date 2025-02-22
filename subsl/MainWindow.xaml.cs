@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media.Imaging;
+using Microsoft.Win32;
 
 namespace subsl
 {
@@ -35,23 +36,34 @@ namespace subsl
         }
 
 
+
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            string InputQueryText = searchBarInput.Text;
+
+            if (InputQueryText != "")
+            {
+                SearchInput search = new SearchInput
+                {
+                    query = InputQueryText,
+                    languages = "en"
+                };
+
+                SearchSubtitle(search);
+            }
 
 
+        }
+
+        private async void SearchSubtitle(SearchInput search)
+        {
             OpenSubtitlesAPI subs = new OpenSubtitlesAPI();
 
             if (subs != null)
             {
-                string InputQueryText = searchBarInput.Text;
-                if (InputQueryText != "")
-                {
-                    SearchInput search = new SearchInput {
-                        query = InputQueryText,
-                        languages = "en"
-                    };
+
                     SearchResults SubtitleSearchResults = await subs.Search(search);
-                    
+
                     if (SubtitleSearchResults?.data != null)
                     {
                         StatusText.Visibility = Visibility.Hidden;
@@ -63,18 +75,17 @@ namespace subsl
                             FeatureType.Add(item.attributes.feature_details.feature_type);
                             Langauges.Add(item.attributes.language);
                         }
-                        
+
                         sublist.ItemsSource = Subtitles;
                         FeatTypeCombo.ItemsSource = FeatureType.Distinct();
                         LangTypeCombo.ItemsSource = Langauges.Distinct();
-                    } else
+                    }
+                    else
                     {
                         StatusText.Visibility = Visibility.Visible;
                         StatusTextGrid.Visibility = Visibility.Visible;
                     }
-                }
             }
-
         }
 
         private void ListViewItem_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -100,25 +111,70 @@ namespace subsl
             }
 
             if (CurrentSelected?.attributes?.feature_details?.title != null)
+            {
                 movieTitle.Text = CurrentSelected.attributes.feature_details.title;
+            }
+                
 
             if (CurrentSelected?.attributes?.feature_details?.imdb_id != null)
+            {
                 movieimdb_id.Text = CurrentSelected.attributes.feature_details.imdb_id.ToString();
+            }
+                
             
             if (CurrentSelected?.attributes?.feature_details?.year != null)
+            {
                 movieyear.Text = CurrentSelected.attributes.feature_details.year.ToString();
+            }
+                
         }
 
         private void DownLoadSub_Click(object sender, RoutedEventArgs e)
         {
-            if(CurrentSelected?.attributes?.subtitle_id != null)
-                MessageBox.Show(CurrentSelected.attributes.subtitle_id);
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.DefaultExt = "sub";
+            saveFileDialog.Filter = "Subtitles (*.sub)|*.sub|All files (*.*)|*.*";
+
+            if (CurrentSelected?.attributes?.subtitle_id != null)
+            {
+                saveFileDialog.FileName = $"{CurrentSelected?.attributes?.subtitle_id}.sub";
+            }
+                
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                Debug.WriteLine(saveFileDialog.FileName);
+            }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+
             OptionsWindow options = new OptionsWindow();
             options.Show();
+
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string filename = openFileDialog.FileName;
+                byte[] moviehash = MovieHash.ComputeMovieHash($"{filename}");
+                string hash = MovieHash.ToHexadecimal(moviehash);
+                
+
+                if (hash != "")
+                {
+                    SearchInput search = new SearchInput
+                    {
+                        moviehash = hash,
+                    };
+
+                    SearchSubtitle(search);
+                }
+            }
+
         }
     }
 
