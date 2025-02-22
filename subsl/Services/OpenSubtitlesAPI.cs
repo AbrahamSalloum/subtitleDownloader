@@ -7,6 +7,8 @@ using System.Text;
 using subsl.Models;
 using System.Diagnostics;
 using System.Net;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace subsl.Services
 {
@@ -20,10 +22,16 @@ namespace subsl.Services
         private static string _UserName;
         private static string _Password;
 
-        readonly LoginInput _cred;
-        public OpenSubtitlesAPI(LoginInput cred) 
+        
+        public OpenSubtitlesAPI() 
         {
-            _cred = cred;
+            LoginInput? cred;
+            using (StreamReader r = new StreamReader("./cred.json"))
+            {
+                string file = r.ReadToEnd();
+                cred = JsonSerializer.Deserialize<LoginInput>(file);
+            }
+
             _ApiKey = cred.apikey;
             _UserName = cred.username;
             _Password = cred.password;

@@ -37,13 +37,10 @@ namespace subsl
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            LoginInput creds = new LoginInput();
-            //creds.username = "user";
-            //creds.password = "pass";
-            //creds.apikey = "fake";
 
-            OpenSubtitlesAPI subs = new OpenSubtitlesAPI(creds);
-            //LoginOutput Logindetails =  await subs.Login();
+
+            OpenSubtitlesAPI subs = new OpenSubtitlesAPI();
+
             if (subs != null)
             {
                 string InputQueryText = searchBarInput.Text;
