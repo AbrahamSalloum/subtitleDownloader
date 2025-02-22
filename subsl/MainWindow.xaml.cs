@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-
 using System.Windows;
 using subsl.Services;
 using subsl.Models;
@@ -9,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
+using System.Security.Policy;
 
 namespace subsl
 {
@@ -22,8 +22,8 @@ namespace subsl
         public ObservableCollection<String> FeatureType { get; set; }
         public ObservableCollection<String> Langauges { get; set; }
 
-        private ItemList CurrentSelected; 
-
+        private ItemList CurrentSelected;
+        private OpenSubtitlesAPI subs;
         public MainWindow()
         {
             InitializeComponent();
@@ -32,12 +32,12 @@ namespace subsl
             Subtitles = new ObservableCollection<ItemList>();
             FeatureType = new ObservableCollection<String>();
             Langauges = new ObservableCollection<String>();
-            CurrentSelected = new ItemList(); 
+            CurrentSelected = new ItemList();
+            subs = new OpenSubtitlesAPI();
+            subs.Login(); 
         }
 
-
-
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private void SearchText(object sender, RoutedEventArgs e)
         {
             string InputQueryText = searchBarInput.Text;
 
@@ -48,16 +48,14 @@ namespace subsl
                     query = InputQueryText,
                     languages = "en"
                 };
-
+                MovieHashText.Text = "";
                 SearchSubtitle(search);
             }
-
-
         }
 
         private async void SearchSubtitle(SearchInput search)
         {
-            OpenSubtitlesAPI subs = new OpenSubtitlesAPI();
+            
 
             if (subs != null)
             {
@@ -93,7 +91,7 @@ namespace subsl
             var listView = sender as ListView;
             CurrentSelected = listView?.SelectedItem as ItemList;
             Debug.WriteLine(CurrentSelected?.attributes?.url);
-            MessageBox.Show($"subtitle id: {CurrentSelected?.attributes?.subtitle_id}");
+            MessageBox.Show("Nothing");
             
         }
         private void ListViewItem_MouseClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -129,7 +127,7 @@ namespace subsl
                 
         }
 
-        private void DownLoadSub_Click(object sender, RoutedEventArgs e)
+        private async void DownLoadSub_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.DefaultExt = "sub";
@@ -142,11 +140,13 @@ namespace subsl
                 
             if (saveFileDialog.ShowDialog() == true)
             {
-                Debug.WriteLine(saveFileDialog.FileName);
+                DownloadLinkInfo dlinfo = await subs.RequestDownloadInfo(CurrentSelected?.attributes?.subtitle_id);
+                await subs.DownloadSubtitle(dlinfo.link, saveFileDialog.FileName);
+
             }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void OpenOptionsWindow(object sender, RoutedEventArgs e)
         {
 
             OptionsWindow options = new OptionsWindow();
@@ -154,7 +154,7 @@ namespace subsl
 
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void SearchMovieHash(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
@@ -162,7 +162,7 @@ namespace subsl
                 string filename = openFileDialog.FileName;
                 byte[] moviehash = MovieHash.ComputeMovieHash($"{filename}");
                 string hash = MovieHash.ToHexadecimal(moviehash);
-                
+                MovieHashText.Text = hash;
 
                 if (hash != "")
                 {

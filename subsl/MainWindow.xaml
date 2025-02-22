@@ -20,8 +20,8 @@
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             <TextBox Grid.Row="0" Grid.Column="0"  Name="searchBarInput" Width="Auto" VerticalContentAlignment="Center" />
-            <Button Grid.Row="0" Grid.Column="1" Click="Button_Click_2">File</Button>
-            <Button Grid.Row="0" Grid.Column="2" Click="Button_Click">Search</Button>
+            <Button Grid.Row="0" Grid.Column="1" Click="SearchMovieHash">File</Button>
+            <Button Grid.Row="0" Grid.Column="2" Click="SearchText">Search</Button>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -31,7 +31,7 @@
             </Grid.ColumnDefinitions>
             <ComboBox  Name="FeatTypeCombo" Grid.Row="0" Grid.Column="0"></ComboBox>
             <ComboBox Name="LangTypeCombo" Grid.Row="0" Grid.Column="1"></ComboBox>
-            <Button Grid.Row="0" Grid.Column="2" Click="Button_Click_1">Options</Button>
+            <Button Grid.Row="0" Grid.Column="2" Click="OpenOptionsWindow">Options</Button>
         </Grid>
         <Grid Grid.Row="2" Name="StatusTextGrid" Visibility="Collapsed">
             <TextBox Name="StatusText" Visibility="Hidden" Text="No Results"/>
@@ -53,6 +53,7 @@
                 </ListView.View>
             </ListView>
             <Grid Grid.Row="0" Grid.Column="1" Margin="5 10" x:Name="panelside">
+                <TextBlock Name="MovieHashText" Text="Movie Title" />
                 <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" HorizontalAlignment="Center" >
                     <Grid Width="150" Background="silver" >
                         <Image Name="img"/>
