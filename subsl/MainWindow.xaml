@@ -6,12 +6,13 @@
         xmlns:local="clr-namespace:subsl"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid Margin="20">
+    <Grid Margin="20 20 20 0">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="1*"/>
+            <RowDefinition Height="18"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -44,15 +45,15 @@
             <ListView Name="sublist" SelectionMode="Single" Grid.Row="0" Grid.Column="0" Margin="0 5" MouseDoubleClick="ListViewItem_MouseDoubleClick" MouseLeftButtonUp="ListViewItem_MouseClick">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Name" Width="120" DisplayMemberBinding="{Binding type}" />
-                        <GridViewColumn Header="Name" Width="120" DisplayMemberBinding="{Binding attributes.language}" />
-                        <GridViewColumn Header="Name" Width="120" DisplayMemberBinding="{Binding attributes.new_download_count}" />
-                        <GridViewColumn Header="Name" Width="120" DisplayMemberBinding="{Binding attributes.files[0].file_name}" />
-                        <GridViewColumn Header="Name" Width="120" DisplayMemberBinding="{Binding attributes.feature_details.feature_type}" />
+                        <GridViewColumn Header="Ttile" Width="120" DisplayMemberBinding="{Binding attributes.files[0].file_name}" />
+                        <GridViewColumn Header="Langauge" Width="120" DisplayMemberBinding="{Binding attributes.language}" />
+                        <GridViewColumn Header="Type" Width="120" DisplayMemberBinding="{Binding type}" />
+                        <GridViewColumn Header="Downloads" Width="120" DisplayMemberBinding="{Binding attributes.new_download_count}" />
+                        <GridViewColumn Header="Feature" Width="120" DisplayMemberBinding="{Binding attributes.feature_details.feature_type}" />
                     </GridView>
                 </ListView.View>
             </ListView>
-            <Grid Grid.Row="0" Grid.Column="1" Margin="5 10" x:Name="panelside">
+            <Grid Grid.Row="0" Grid.Column="1" Margin="5 " x:Name="panelside">
                 <TextBlock Name="MovieHashText" Text="Movie Title" />
                 <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" HorizontalAlignment="Center" >
                     <Grid Width="150" Background="silver" >
@@ -75,6 +76,9 @@
                     <Button Name="DownLoadSub" Content="Download"  Click="DownLoadSub_Click" Margin="3 0"/>
                 </StackPanel>
             </Grid>
+        </Grid>
+        <Grid Grid.Row="4">
+            <TextBlock Name="StatusBox" Text=""/>
         </Grid>
     </Grid>
 </Window>

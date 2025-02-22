@@ -24,6 +24,7 @@ namespace subsl
 
         private ItemList CurrentSelected;
         private OpenSubtitlesAPI subs;
+        private bool LoggedIn = false;  
         public MainWindow()
         {
             InitializeComponent();
@@ -34,7 +35,6 @@ namespace subsl
             Langauges = new ObservableCollection<String>();
             CurrentSelected = new ItemList();
             subs = new OpenSubtitlesAPI();
-            subs.Login(); 
         }
 
         private void SearchText(object sender, RoutedEventArgs e)
@@ -55,12 +55,19 @@ namespace subsl
 
         private async void SearchSubtitle(SearchInput search)
         {
+
+            if(LoggedIn == false)
+            {
+                StatusBox.Text = "Logging In...";
+                await subs.Login();
+                LoggedIn = true; 
+            }
             
 
             if (subs != null)
             {
-
-                    SearchResults SubtitleSearchResults = await subs.Search(search);
+                StatusBox.Text = "Searching...";
+                SearchResults SubtitleSearchResults = await subs.Search(search);
 
                     if (SubtitleSearchResults?.data != null)
                     {
@@ -84,6 +91,7 @@ namespace subsl
                         StatusTextGrid.Visibility = Visibility.Visible;
                     }
             }
+            StatusBox.Text = "";
         }
 
         private void ListViewItem_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -100,12 +108,12 @@ namespace subsl
             CurrentSelected = listView?.SelectedItem as ItemList;
             if (CurrentSelected?.attributes?.related_links?[0]?.img_url != null)
             {
-                PosterStatus.Text = "Loading Poster";
+                PosterStatus.Text = "Loading Poster.";
                 string imgurl = CurrentSelected.attributes.related_links[0].img_url;
                 img.Source = new BitmapImage(new Uri(imgurl));
             } else
             {
-                PosterStatus.Text = "No Poster Found";
+                PosterStatus.Text = "No Poster Found.";
             }
 
             if (CurrentSelected?.attributes?.feature_details?.title != null)
@@ -132,38 +140,37 @@ namespace subsl
 
             DownloadLinkInfo dlinfo;
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.DefaultExt = "sub";
-            saveFileDialog.Filter = "Subtitles (*.sub)|*.sub|All files (*.*)|*.*";
+            saveFileDialog.DefaultExt = "srt";
+            saveFileDialog.Filter = "Subtitles (*.srt)|*.srt|All files (*.*)|*.*";
+            
 
-                
+
             if (CurrentSelected?.attributes?.subtitle_id != null)
             {
-            
+                StatusBox.Text = $"Downloading {CurrentSelected?.attributes?.subtitle_id}.";
                 dlinfo = await subs.RequestDownloadInfo(CurrentSelected?.attributes?.subtitle_id);
-            
+                saveFileDialog.FileName = $"{dlinfo.file_name}.{CurrentSelected?.attributes?.subtitle_id}.srt";
+
             } else
             {
 
-                MessageBox.Show("No Subtitle Selected");
+                MessageBox.Show("No Subtitle Selected.");
                 return;
             
             }
 
             if (saveFileDialog.ShowDialog() == true)
             {
-                saveFileDialog.FileName = $"{CurrentSelected?.attributes?.subtitle_id}.sub";
+                
                 await subs.DownloadSubtitle(dlinfo.link, saveFileDialog.FileName);
+                StatusBox.Text = "";
             }
-
-
         }
 
         private void OpenOptionsWindow(object sender, RoutedEventArgs e)
         {
-
             OptionsWindow options = new OptionsWindow();
             options.Show();
-
         }
 
         private void SearchMovieHash(object sender, RoutedEventArgs e)
@@ -182,12 +189,10 @@ namespace subsl
                     {
                         moviehash = hash,
                     };
-
+                    
                     SearchSubtitle(search);
                 }
             }
-
         }
     }
-
-    }
+}

@@ -83,7 +83,7 @@ namespace subsl.Services
         {
             int SubIdInt = Int32.Parse(SubId);
             string BodyText = $"{{\n  \"file_id\": {SubIdInt}\n}}";
-            var client = new HttpClient();
+
             Debug.WriteLine($"Token: {_token}");
             var request = new HttpRequestMessage
             {
@@ -92,19 +92,15 @@ namespace subsl.Services
                 Headers =
                     {
                         { "User-Agent", "a123" },
+                        {"Api-Key", $"{_ApiKey}" },
                         { "Accept", "application/json" },
-                        { "Authorization", $"Bearer {_token}"},
+                        { "Authorization", $"Bearer {_token}"}
+                        
                     },
-                Content = new StringContent(BodyText)
-                {
-                        Headers =
-                        {
-                            ContentType = new MediaTypeHeaderValue("application/json")
-                        }
-                }
+                Content = new StringContent(BodyText, Encoding.UTF8, "application/json")
             };
 
-            var response = await client.SendAsync(request);
+            var response = await _HttpClient.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
             {
