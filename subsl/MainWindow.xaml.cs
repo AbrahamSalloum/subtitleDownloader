@@ -129,21 +129,33 @@ namespace subsl
 
         private async void DownLoadSub_Click(object sender, RoutedEventArgs e)
         {
+
+            DownloadLinkInfo dlinfo;
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.DefaultExt = "sub";
             saveFileDialog.Filter = "Subtitles (*.sub)|*.sub|All files (*.*)|*.*";
 
+                
             if (CurrentSelected?.attributes?.subtitle_id != null)
             {
-                saveFileDialog.FileName = $"{CurrentSelected?.attributes?.subtitle_id}.sub";
+            
+                dlinfo = await subs.RequestDownloadInfo(CurrentSelected?.attributes?.subtitle_id);
+            
+            } else
+            {
+
+                MessageBox.Show("No Subtitle Selected");
+                return;
+            
             }
-                
+
             if (saveFileDialog.ShowDialog() == true)
             {
-                DownloadLinkInfo dlinfo = await subs.RequestDownloadInfo(CurrentSelected?.attributes?.subtitle_id);
+                saveFileDialog.FileName = $"{CurrentSelected?.attributes?.subtitle_id}.sub";
                 await subs.DownloadSubtitle(dlinfo.link, saveFileDialog.FileName);
-
             }
+
+
         }
 
         private void OpenOptionsWindow(object sender, RoutedEventArgs e)

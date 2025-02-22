@@ -2,15 +2,11 @@
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Security.Policy;
 using System.Text;
 using subsl.Models;
-using System.Diagnostics;
-using System.Net;
-using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Net.Http.Headers;
-using System.Windows.Controls;
+using System.Diagnostics;
 
 namespace subsl.Services
 {
@@ -57,6 +53,7 @@ namespace subsl.Services
 
             _token = logininfo.token;
             _BaseURL = logininfo.base_url;
+            Debug.WriteLine($"Token: {_token}");
             return logininfo;
         }
 
@@ -85,27 +82,29 @@ namespace subsl.Services
         public async Task<DownloadLinkInfo?> RequestDownloadInfo(string SubId)
         {
             int SubIdInt = Int32.Parse(SubId);
-
+            string BodyText = $"{{\n  \"file_id\": {SubIdInt}\n}}";
+            var client = new HttpClient();
+            Debug.WriteLine($"Token: {_token}");
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
                 RequestUri = new Uri($"https://{_BaseURL}/api/v1/download"),
                 Headers =
                     {
-                        { "User-Agent", "aa123" },
+                        { "User-Agent", "a123" },
                         { "Accept", "application/json" },
                         { "Authorization", $"Bearer {_token}"},
                     },
-                Content = new StringContent($"{{\n  \"file_id\": {SubIdInt}\n}}")
-                    {
-                    Headers =
+                Content = new StringContent(BodyText)
+                {
+                        Headers =
                         {
                             ContentType = new MediaTypeHeaderValue("application/json")
                         }
-                    }
+                }
             };
 
-            var response = await _HttpClient.SendAsync(request);
+            var response = await client.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
             {
