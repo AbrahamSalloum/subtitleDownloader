@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:subsl"
+        d:DataContext="{d:DesignInstance local:MainWindow}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Subtitles" Height="450" Width="800">
     <Grid Margin="20 20 20 0">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>

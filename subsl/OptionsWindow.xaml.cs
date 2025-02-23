@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,11 +18,21 @@ namespace subsl
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
+
+    
     public partial class OptionsWindow : Window
     {
+
+        public List<string> OptionsWithOnly { get; set; }
+        public List<string> OptionsWithOutOnly { get; set; }
         public OptionsWindow()
         {
             InitializeComponent();
+           
+             OptionsWithOnly = ["include", "exclude", "only"];
+             OptionsWithOutOnly = ["include", "exclude"];
+
+            DataContext = this;
         }
     }
 }

@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:subsl"
         mc:Ignorable="d"
-        Title="Window1" Height="450" Width="800">
+         d:DataContext="{d:DesignInstance local:OptionsWindow}"
+        Title="Options" Height="450" Width="800">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -14,10 +15,23 @@
         <Grid Grid.Row="0">
             <StackPanel>
                 <TextBlock Text="AI Translated" />
-                <ComboBox  Name="ai_translated">
-                    <ComboBoxItem Content="include"  />
-                    <ComboBoxItem Content="exclude"  />
+                <ComboBox  Name="ai_translated" ItemsSource="{Binding OptionsWithOutOnly}">
                 </ComboBox>
+                <TextBlock Text="Machine Translated" />
+                    <ComboBox  Name="machine_translated" ItemsSource="{Binding OptionsWithOutOnly}">
+
+                    </ComboBox>
+
+                <TextBlock Text="Foreign Parts Only" />
+                <ComboBox  Name="foreign_parts_only" ItemsSource="{Binding OptionsWithOnly}">
+                </ComboBox>
+
+                <TextBlock Text="Hearing Impaired" />
+                <ComboBox  Name="hearing_impaired" ItemsSource="{Binding OptionsWithOnly}" >
+                </ComboBox>
+
+                <TextBlock Text="IMDb ID" />
+                <TextBox  Name="imdb_id" />
             </StackPanel>
         </Grid>
 

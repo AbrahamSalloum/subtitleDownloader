@@ -1,14 +1,12 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows;
 using subsl.Services;
 using subsl.Models;
 using System.Diagnostics;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
-using System.Security.Policy;
+
 
 namespace subsl
 {
@@ -50,7 +48,6 @@ namespace subsl
                 SearchSubtitle();
             }
         }
-
         private async void SearchSubtitle()
         {
 
@@ -84,19 +81,18 @@ namespace subsl
                     else
                     {
                         StatusBox.Text = "No Results Found.";
-                    return;
+                        return;
                     }
             }
 
             StatusBox.Text = "";
         }
-
         private void ListViewItem_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var listView = sender as ListView;
             CurrentSelected = listView?.SelectedItem as ItemList;
             Debug.WriteLine(CurrentSelected?.attributes?.url);
-            MessageBox.Show("Nothing");
+            MessageBox.Show("Nothing.");
             
         }
         private void ListViewItem_MouseClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -131,7 +127,6 @@ namespace subsl
             }
                 
         }
-
         private async void DownLoadSub_Click(object sender, RoutedEventArgs e)
         {
 
@@ -144,6 +139,7 @@ namespace subsl
 
             if (CurrentSelected?.attributes?.subtitle_id != null)
             {
+
                 StatusBox.Text = $"Downloading {CurrentSelected?.attributes?.subtitle_id}.";
                 dlinfo = await subs.RequestDownloadInfo(CurrentSelected?.attributes?.subtitle_id);
                 saveFileDialog.FileName = $"{dlinfo.file_name}.{CurrentSelected?.attributes?.subtitle_id}.srt";
@@ -153,7 +149,6 @@ namespace subsl
 
                 MessageBox.Show("No Subtitle Selected.");
                 return;
-            
             }
 
             if (saveFileDialog.ShowDialog() == true)
@@ -163,13 +158,11 @@ namespace subsl
                 StatusBox.Text = "";
             }
         }
-
         private void OpenOptionsWindow(object sender, RoutedEventArgs e)
         {
             OptionsWindow options = new OptionsWindow();
             options.Show();
         }
-
         private void SearchMovieHash(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
