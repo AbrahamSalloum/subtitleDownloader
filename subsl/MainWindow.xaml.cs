@@ -43,17 +43,15 @@ namespace subsl
 
             if (InputQueryText != "")
             {
-                SearchInput search = new SearchInput
-                {
-                    query = InputQueryText,
-                    languages = "en"
-                };
+
+
+                SearchInput.Query["query"] = InputQueryText;
                 MovieHashText.Text = "";
-                SearchSubtitle(search);
+                SearchSubtitle();
             }
         }
 
-        private async void SearchSubtitle(SearchInput search)
+        private async void SearchSubtitle()
         {
 
             if(LoggedIn == false)
@@ -67,12 +65,10 @@ namespace subsl
             if (subs != null)
             {
                 StatusBox.Text = "Searching...";
-                SearchResults SubtitleSearchResults = await subs.Search(search);
+                SearchResults SubtitleSearchResults = await subs.Search(SearchInput.Query);
 
                     if (SubtitleSearchResults?.data != null)
                     {
-                        StatusText.Visibility = Visibility.Hidden;
-                        StatusTextGrid.Visibility = Visibility.Collapsed;
                         Subtitles.Clear();
                         foreach (var item in SubtitleSearchResults.data)
                         {
@@ -87,10 +83,11 @@ namespace subsl
                     }
                     else
                     {
-                        StatusText.Visibility = Visibility.Visible;
-                        StatusTextGrid.Visibility = Visibility.Visible;
+                        StatusBox.Text = "No Results Found.";
+                    return;
                     }
             }
+
             StatusBox.Text = "";
         }
 
@@ -176,6 +173,7 @@ namespace subsl
         private void SearchMovieHash(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+
             if (openFileDialog.ShowDialog() == true)
             {
                 string filename = openFileDialog.FileName;
@@ -185,12 +183,13 @@ namespace subsl
 
                 if (hash != "")
                 {
-                    SearchInput search = new SearchInput
-                    {
-                        moviehash = hash,
-                    };
-                    
-                    SearchSubtitle(search);
+                    SearchInput.Query["moviehash"] = hash;
+                    SearchInput.Query["moviehash_match"] = "only";
+
+                    SearchSubtitle();
+
+                    SearchInput.Query.Remove("moviehash");
+                    SearchInput.Query.Remove("moviehash_match");
                 }
             }
         }

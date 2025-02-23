@@ -57,15 +57,12 @@ namespace subsl.Services
             return logininfo;
         }
 
-        public async Task<SearchResults?> Search(SearchInput SearchBoxInput)
+        public async Task<SearchResults?> Search(Dictionary<string, object> SearchBoxInput)
         {
             string qqueryparam = "";
-            foreach (var item in SearchBoxInput.GetType().GetProperties())
+            foreach (var item in SearchBoxInput)
             {
-                if (item.GetValue(SearchBoxInput) != null)
-                {
-                    qqueryparam += $"&{item.Name}={item.GetValue(SearchBoxInput)}";
-                }
+                qqueryparam += $"&{item.Key}={item.Value}";
             }
 
 
