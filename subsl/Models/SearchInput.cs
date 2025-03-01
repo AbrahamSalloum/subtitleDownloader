@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
-
+﻿
 namespace subsl.Models
 {
     public static class SearchInput
@@ -35,6 +29,21 @@ namespace subsl.Models
 
         public static Dictionary<string, object> Query = new Dictionary<string, object>();
 
+        public static void ClearQuery()
+        {
+            Query.Clear();
+            
+        }
+
+        public static void AddQuery(string key, object value)
+        {
+            Query[key] = value;
+        }
+
+        public static void RemoveQuery(string key)
+        {
+            Query.Remove(key);
+        }
 
         public static List<FeatureType> FeatureList = new List<FeatureType>()
         {
@@ -133,9 +142,4 @@ namespace subsl.Models
         public string? type { get; set; }
         public string? name { get; set; }
     }
-
-
-
-
-
 }

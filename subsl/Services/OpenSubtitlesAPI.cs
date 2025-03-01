@@ -13,12 +13,12 @@ namespace subsl.Services
     public class OpenSubtitlesAPI
     {
         private static HttpClient _HttpClient = new HttpClient();
-        private static string _token;
+        private static string? _token;
         private static string _BaseURL = "api.opensubtitles.com";
 
-        private static string _ApiKey;
-        private static string _UserName;
-        private static string _Password;
+        private static string? _ApiKey;
+        private static string? _UserName;
+        private static string? _Password;
 
 
         public OpenSubtitlesAPI()
@@ -28,6 +28,11 @@ namespace subsl.Services
             {
                 string file = r.ReadToEnd();
                 cred = JsonSerializer.Deserialize<LoginInput>(file);
+            }
+
+            if(cred == null)
+            {
+                throw new Exception("Invalid Credentials");
             }
 
             _ApiKey = cred.apikey;
@@ -57,8 +62,13 @@ namespace subsl.Services
             return logininfo;
         }
 
-        public async Task<SearchResults?> Search(Dictionary<string, object> SearchBoxInput)
+        public async Task<SearchResults?> Search(Dictionary<string, object>? SearchBoxInput)
         {
+
+            if(SearchBoxInput == null)
+            {
+                return null;
+            }
             string qqueryparam = "";
             foreach (var item in SearchBoxInput)
             {
@@ -76,12 +86,15 @@ namespace subsl.Services
         }
 
 
-        public async Task<DownloadLinkInfo?> RequestDownloadInfo(string SubId)
+        public async Task<DownloadLinkInfo?> RequestDownloadInfo(string? SubId)
         {
+            if(SubId == null)
+            {
+                return null;
+            }
             int SubIdInt = Int32.Parse(SubId);
             string BodyText = $"{{\n  \"file_id\": {SubIdInt}\n}}";
 
-            Debug.WriteLine($"Token: {_token}");
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
@@ -105,7 +118,7 @@ namespace subsl.Services
                 throw new HttpRequestException($"Request failed with status code {response.StatusCode}. Content: {content}");
             }
 
-            DownloadLinkInfo DownloadInfo = await response.Content.ReadFromJsonAsync<DownloadLinkInfo>();
+            DownloadLinkInfo? DownloadInfo = await response.Content.ReadFromJsonAsync<DownloadLinkInfo>();
             return DownloadInfo;
         }
 

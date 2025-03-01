@@ -16,8 +16,8 @@ namespace subsl
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        
-        public ObservableCollection<ItemList> Subtitles { get; set; }
+
+        public ObservableCollection<ItemList> Subtitles;
         public ObservableCollection<FeatureType> FeatureTypes { get; set; }
         public ObservableCollection<Langdef> Langauges { get; set; }
 
@@ -25,55 +25,11 @@ namespace subsl
         private OpenSubtitlesAPI subs;
         private bool LoggedIn = false;
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private void NotifyPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-
-        private string _lang = "";
-
-        /// String property used in binding examples.
-        public string lang
-        {
-            get { return _lang; }
-            set
-            {
-                if (_lang != value)
-                {
-                    _lang = value;
-                    NotifyPropertyChanged(nameof(lang));
-                }
-            }
-        }
-
-
-        private string _feat = "";
-
-        /// String property used in binding examples.
-        public string feat
-        {
-            get { return _feat; }
-            set
-            {
-                if (_feat != value)
-                {
-                    _feat = value;
-                    NotifyPropertyChanged(nameof(feat));
-                }
-            }
-        }
-
         public MainWindow()
         {
             InitializeComponent();
-            
             this.DataContext = this;
+
             Subtitles = new ObservableCollection<ItemList>();
             FeatureTypes = new ObservableCollection<FeatureType>(SearchInput.FeatureList as List<FeatureType>);
             Langauges = new ObservableCollection<Langdef>(SearchInput.LangList as List<Langdef>);
@@ -83,16 +39,13 @@ namespace subsl
 
         private void SearchText(object sender, RoutedEventArgs e)
         {
-            string InputQueryText = searchBarInput.Text;
 
-            if (InputQueryText != "")
+            if (query != "")
             {
-
-                //MessageBox.Show($" for {lang}");
                 SearchInput.Query["type"] = feat;
                 SearchInput.Query["languages"] = lang;
-                SearchInput.Query["query"] = InputQueryText;
-                MovieHashText.Text = "";
+                SearchInput.Query["query"] = query;
+                hash = null;
                 SearchSubtitle();
             }
         }
@@ -101,7 +54,7 @@ namespace subsl
 
             if(LoggedIn == false)
             {
-                StatusBox.Text = "Logging In...";
+                StatusTxt = "Logging In...";
                 await subs.Login();
                 LoggedIn = true; 
             }
@@ -109,7 +62,7 @@ namespace subsl
 
             if (subs != null)
             {
-                StatusBox.Text = "Searching...";
+                StatusTxt = "Searching...";
                 SearchResults SubtitleSearchResults = await subs.Search(SearchInput.Query);
 
                     if (SubtitleSearchResults?.data != null)
@@ -125,12 +78,12 @@ namespace subsl
                 }
                     else
                     {
-                        StatusBox.Text = "No Results Found.";
+                    StatusTxt = "No Results Found.";
                         return;
                     }
             }
 
-            StatusBox.Text = "";
+            StatusTxt = null;
         }
         private void ListViewItem_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
@@ -140,42 +93,48 @@ namespace subsl
             MessageBox.Show("Nothing.");
             
         }
-        private void ListViewItem_MouseClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void ListViewItem_MouseClick(object sender, System.Windows.Input.MouseButtonEventArgs? e)
         {
             var listView = sender as ListView;
             CurrentSelected = listView?.SelectedItem as ItemList;
+            PosterStatus = null;
+            img = null;
             if (CurrentSelected?.attributes?.related_links?[0]?.img_url != null)
             {
-                PosterStatus.Text = "Loading Poster.";
-                string imgurl = CurrentSelected.attributes.related_links[0].img_url;
-                img.Source = new BitmapImage(new Uri(imgurl));
+                PosterStatus = "Loading Poster.";
+                string? imgurl = CurrentSelected.attributes.related_links[0].img_url;
+                if (imgurl != null)
+                {
+                    img = new BitmapImage(new Uri(imgurl));
+                }
+                
             } else
             {
-                PosterStatus.Text = "No Poster Found.";
+                PosterStatus = "No Poster Found.";
             }
-
+            movieTitle = null;
             if (CurrentSelected?.attributes?.feature_details?.title != null)
             {
-                movieTitle.Text = CurrentSelected.attributes.feature_details.title;
+                movieTitle = CurrentSelected.attributes.feature_details.title;
             }
-                
 
+            movieimdb_id = null;
             if (CurrentSelected?.attributes?.feature_details?.imdb_id != null)
             {
-                movieimdb_id.Text = CurrentSelected.attributes.feature_details.imdb_id.ToString();
+                movieimdb_id = CurrentSelected.attributes.feature_details.imdb_id.ToString();
             }
-                
-            
+
+            movieyear = null; 
             if (CurrentSelected?.attributes?.feature_details?.year != null)
             {
-                movieyear.Text = CurrentSelected.attributes.feature_details.year.ToString();
+                movieyear = CurrentSelected.attributes.feature_details.year.ToString();
             }
                 
         }
         private async void DownLoadSub_Click(object sender, RoutedEventArgs e)
         {
 
-            DownloadLinkInfo dlinfo;
+            DownloadLinkInfo? dlinfo;
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.DefaultExt = "srt";
             saveFileDialog.Filter = "Subtitles (*.srt)|*.srt|All files (*.*)|*.*";
@@ -185,11 +144,18 @@ namespace subsl
             if (CurrentSelected?.attributes?.subtitle_id != null)
             {
 
-                StatusBox.Text = $"Downloading {CurrentSelected?.attributes?.subtitle_id}.";
+                StatusTxt = $"Downloading {CurrentSelected?.attributes?.subtitle_id}.";
                 dlinfo = await subs.RequestDownloadInfo(CurrentSelected?.attributes?.subtitle_id);
-                saveFileDialog.FileName = $"{dlinfo.file_name}.{CurrentSelected?.attributes?.subtitle_id}.srt";
-
-            } else
+                if (dlinfo != null)
+                {
+                    saveFileDialog.FileName = $"{dlinfo.file_name}.{CurrentSelected?.attributes?.subtitle_id}.srt";
+                }
+                else
+                {
+                    MessageBox.Show("No Download Link Found.");
+                    return;
+                }
+                } else
             {
 
                 MessageBox.Show("No Subtitle Selected.");
@@ -200,7 +166,7 @@ namespace subsl
             {
                 
                 await subs.DownloadSubtitle(dlinfo.link, saveFileDialog.FileName);
-                StatusBox.Text = "";
+                StatusTxt = "";
             }
         }
         private void OpenOptionsWindow(object sender, RoutedEventArgs e)
@@ -216,8 +182,7 @@ namespace subsl
             {
                 string filename = openFileDialog.FileName;
                 byte[] moviehash = MovieHash.ComputeMovieHash($"{filename}");
-                string hash = MovieHash.ToHexadecimal(moviehash);
-                MovieHashText.Text = hash;
+                hash = MovieHash.ToHexadecimal(moviehash);
 
                 if (hash != "")
                 {
@@ -228,5 +193,163 @@ namespace subsl
                 }
             }
         }
+
+
+        private string? _lang = "";
+        public string? lang
+        {
+            get { return _lang; }
+            set
+            {
+                if (_lang != value)
+                {
+                    _lang = value;
+                    NotifyPropertyChanged(nameof(lang));
+                }
+            }
+        }
+
+
+        private string? _StatusTxt;
+        public string? StatusTxt
+        {
+            get { return _StatusTxt; }
+            set
+            {
+                if (_StatusTxt != value)
+                {
+                    _StatusTxt = value;
+                    NotifyPropertyChanged(nameof(StatusTxt));
+                }
+            }
+        }
+
+
+        private string? _query;
+        public string? query
+        {
+            get { return _query; }
+            set
+            {
+                if (_query != value)
+                {
+                    _query = value;
+                    NotifyPropertyChanged(nameof(query));
+                }
+            }
+        }
+
+        private string? _feat = "all";
+        public string? feat
+        {
+            get { return _feat; }
+            set
+            {
+                if (_feat != value)
+                {
+                    _feat = value;
+                    NotifyPropertyChanged(nameof(feat));
+                }
+            }
+        }
+
+
+        private string? _hash;
+        public string? hash
+        {
+            get { return _hash; }
+            set
+            {
+                if (_hash != value)
+                {
+                    _hash = value;
+                    NotifyPropertyChanged(nameof(hash));
+                }
+            }
+        }
+
+        private string? _PosterStatus;
+        public string? PosterStatus
+        {
+            get { return _PosterStatus; }
+            set
+            {
+                if (_PosterStatus != value)
+                {
+                    _PosterStatus = value;
+                    NotifyPropertyChanged(nameof(PosterStatus));
+                }
+            }
+        }
+
+        private string? _movieyear;
+        public string? movieyear
+        {
+            get { return _movieyear; }
+            set
+            {
+                if (_movieyear != value)
+                {
+                    _movieyear = value;
+                    NotifyPropertyChanged(nameof(movieyear));
+                }
+            }
+        }
+
+
+
+        private string? _movieimdb_id;
+        public string? movieimdb_id
+        {
+            get { return _movieimdb_id; }
+            set
+            {
+                if (_movieimdb_id != value)
+                {
+                    _movieimdb_id = value;
+                    NotifyPropertyChanged(nameof(movieimdb_id));
+                }
+            }
+        }
+
+
+        private string? _movieTitle;
+        public string? movieTitle
+        {
+            get { return _movieTitle; }
+            set
+            {
+                if (_movieTitle != value)
+                {
+                    _movieTitle = value;
+                    NotifyPropertyChanged(nameof(movieTitle));
+                }
+            }
+        }
+
+
+        private BitmapImage? _img;
+        public BitmapImage? img
+        {
+            get { return _img; }
+            set
+            {
+                if (_img != value)
+                {
+                    _img = value;
+                    NotifyPropertyChanged(nameof(img));
+                }
+            }
+        }
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
     }
 }
