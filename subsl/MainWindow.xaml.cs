@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
+using System.ComponentModel;
 
 
 namespace subsl
@@ -13,24 +14,68 @@ namespace subsl
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         
         public ObservableCollection<ItemList> Subtitles { get; set; }
-        public ObservableCollection<String> FeatureType { get; set; }
+        public ObservableCollection<FeatureType> FeatureTypes { get; set; }
         public ObservableCollection<Langdef> Langauges { get; set; }
 
         private ItemList CurrentSelected;
         private OpenSubtitlesAPI subs;
-        private bool LoggedIn = false;  
+        private bool LoggedIn = false;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+
+        private string _lang = "";
+
+        /// String property used in binding examples.
+        public string lang
+        {
+            get { return _lang; }
+            set
+            {
+                if (_lang != value)
+                {
+                    _lang = value;
+                    NotifyPropertyChanged(nameof(lang));
+                }
+            }
+        }
+
+
+        private string _feat = "";
+
+        /// String property used in binding examples.
+        public string feat
+        {
+            get { return _feat; }
+            set
+            {
+                if (_feat != value)
+                {
+                    _feat = value;
+                    NotifyPropertyChanged(nameof(feat));
+                }
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
             
             this.DataContext = this;
             Subtitles = new ObservableCollection<ItemList>();
-            FeatureType = new ObservableCollection<String>();
-            //Langauges = new ObservableCollection<String>();
+            FeatureTypes = new ObservableCollection<FeatureType>(SearchInput.FeatureList as List<FeatureType>);
             Langauges = new ObservableCollection<Langdef>(SearchInput.LangList as List<Langdef>);
             CurrentSelected = new ItemList();
             subs = new OpenSubtitlesAPI();
@@ -43,7 +88,9 @@ namespace subsl
             if (InputQueryText != "")
             {
 
-
+                //MessageBox.Show($" for {lang}");
+                SearchInput.Query["type"] = feat;
+                SearchInput.Query["languages"] = lang;
                 SearchInput.Query["query"] = InputQueryText;
                 MovieHashText.Text = "";
                 SearchSubtitle();
@@ -67,19 +114,14 @@ namespace subsl
 
                     if (SubtitleSearchResults?.data != null)
                     {
-                        Subtitles.Clear();
-                        foreach (var item in SubtitleSearchResults.data)
-                        {
-                            Subtitles.Add(item);
-                            FeatureType.Add(item.attributes.feature_details.feature_type);
-                            //Langauges.Add(item.attributes.language);
-                        }
+                    Subtitles.Clear();
+                    foreach (var item in SubtitleSearchResults.data)
+                    {
+                        Subtitles.Add(item);
+                    }
 
-                        sublist.ItemsSource = Subtitles;
-                        FeatTypeCombo.ItemsSource = FeatureType.Distinct();
-                    //LangTypeCombo.ItemsSource = Langauges.Distinct();
+                    sublist.ItemsSource = Subtitles;
 
-                    LangTypeCombo.ItemsSource = Langauges;//.foeEach(x => x.language_code);
                 }
                     else
                     {
@@ -180,12 +222,9 @@ namespace subsl
                 if (hash != "")
                 {
                     SearchInput.Query["moviehash"] = hash;
-                    SearchInput.Query["moviehash_match"] = "only";
-
                     SearchSubtitle();
-
                     SearchInput.Query.Remove("moviehash");
-                    SearchInput.Query.Remove("moviehash_match");
+
                 }
             }
         }

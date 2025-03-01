@@ -35,8 +35,17 @@ namespace subsl.Models
 
         public static Dictionary<string, object> Query = new Dictionary<string, object>();
 
+
+        public static List<FeatureType> FeatureList = new List<FeatureType>()
+        {
+            new FeatureType() { type= "all", name= "Any" },
+            new FeatureType() { type = "Movie", name = "Movie" },
+            new FeatureType() { type = "Episode", name = "Episode" }
+        };
+
         public static List<Langdef> LangList = new List<Langdef>()
         {
+             new Langdef() { language_code= "", language_name= "Any" },
              new Langdef() { language_code= "af", language_name= "Afrikaans" },
              new Langdef() { language_code= "sq", language_name= "Albanian" },
              new Langdef() { language_code= "ar", language_name= "Arabic" },
@@ -118,5 +127,15 @@ namespace subsl.Models
         public  string? language_code { get; set; }
         public  string? language_name { get; set; }
     }
+
+    public class FeatureType
+    {
+        public string? type { get; set; }
+        public string? name { get; set; }
+    }
+
+
+
+
 
 }
