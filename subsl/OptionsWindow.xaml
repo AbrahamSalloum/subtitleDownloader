@@ -13,27 +13,67 @@
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
-            <StackPanel>
-                <TextBlock Text="AI Translated" />
-                <ComboBox  Name="ai_translated" ItemsSource="{Binding OptionsWithOutOnly}">
-                </ComboBox>
-                <TextBlock Text="Machine Translated" />
-                    <ComboBox  Name="machine_translated" ItemsSource="{Binding OptionsWithOutOnly}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0">
+                    <StackPanel >
+                        <TextBlock Text="AI Translated" />
+                        <ComboBox  Name="ai_translated" ItemsSource="{Binding OptionsWithOutOnly}">
+                        </ComboBox>
+                    </StackPanel >
 
+                    <StackPanel>
+                        <TextBlock Text="Machine Translated" />
+                        <ComboBox  Name="machine_translated" ItemsSource="{Binding OptionsWithOutOnly}"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Row="1">
+                    <StackPanel>
+                        <TextBlock Text="Foreign Parts Only" />
+                    <ComboBox  Name="foreign_parts_only" ItemsSource="{Binding OptionsWithOnly}">
                     </ComboBox>
+                    </StackPanel>
+                    <StackPanel>
+                    <TextBlock Text="Hearing Impaired" />
+                    <ComboBox  Name="hearing_impaired" ItemsSource="{Binding OptionsWithOnly}" >
+                    </ComboBox>
+                    </StackPanel>
+                </StackPanel>
 
-                <TextBlock Text="Foreign Parts Only" />
-                <ComboBox  Name="foreign_parts_only" ItemsSource="{Binding OptionsWithOnly}">
-                </ComboBox>
-
-                <TextBlock Text="Hearing Impaired" />
-                <ComboBox  Name="hearing_impaired" ItemsSource="{Binding OptionsWithOnly}" >
-                </ComboBox>
-
+                <StackPanel Grid.Row="2" >
+                    <StackPanel>
                 <TextBlock Text="IMDb ID" />
                 <TextBox  Name="imdb_id" />
+                    </StackPanel>
+                    <StackPanel>
+                    <TextBlock Text="TMDB  ID" />
+                <TextBox  Name="tmdb_id" />
+                        </StackPanel>
+                </StackPanel>
+
+
+                <StackPanel Grid.Row="4">
+                    <StackPanel>
+                    <TextBlock Text="Season Number" />
+                <TextBox  Name="season_number" />
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Episode Number" />
+                <TextBox  Name="episode_number" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Width="100">OK</Button>
+                <Button Width="100" Click="Cancel_Click">Cancel</Button>
             </StackPanel>
         </Grid>
-
     </Grid>
 </Window>

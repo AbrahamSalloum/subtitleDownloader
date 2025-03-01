@@ -31,7 +31,7 @@
                 <ColumnDefinition Width="4*"/>
             </Grid.ColumnDefinitions>
             <ComboBox  Name="FeatTypeCombo" Grid.Row="0" Grid.Column="0"></ComboBox>
-            <ComboBox Name="LangTypeCombo" Grid.Row="0" Grid.Column="1"></ComboBox>
+            <ComboBox Name="LangTypeCombo" Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Langauges}" DisplayMemberPath="language_name" SelectedValuePath="language_code"></ComboBox>
             <Button Grid.Row="0" Grid.Column="2" Click="OpenOptionsWindow">Options</Button>
         </Grid>
         <Grid Grid.Row="2" DataContext="{Binding Subtitles}">
@@ -42,7 +42,7 @@
             <ListView Name="sublist" SelectionMode="Single" Grid.Row="0" Grid.Column="0" Margin="0 5" MouseDoubleClick="ListViewItem_MouseDoubleClick" MouseLeftButtonUp="ListViewItem_MouseClick">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Ttile" Width="120" DisplayMemberBinding="{Binding attributes.files[0].file_name}" />
+                        <GridViewColumn Header="Title" Width="120" DisplayMemberBinding="{Binding attributes.files[0].file_name}" />
                         <GridViewColumn Header="Langauge" Width="120" DisplayMemberBinding="{Binding attributes.language}" />
                         <GridViewColumn Header="Type" Width="120" DisplayMemberBinding="{Binding type}" />
                         <GridViewColumn Header="Downloads" Width="120" DisplayMemberBinding="{Binding attributes.new_download_count}" />

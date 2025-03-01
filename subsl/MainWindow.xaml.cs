@@ -18,7 +18,7 @@ namespace subsl
         
         public ObservableCollection<ItemList> Subtitles { get; set; }
         public ObservableCollection<String> FeatureType { get; set; }
-        public ObservableCollection<String> Langauges { get; set; }
+        public ObservableCollection<Langdef> Langauges { get; set; }
 
         private ItemList CurrentSelected;
         private OpenSubtitlesAPI subs;
@@ -30,7 +30,8 @@ namespace subsl
             this.DataContext = this;
             Subtitles = new ObservableCollection<ItemList>();
             FeatureType = new ObservableCollection<String>();
-            Langauges = new ObservableCollection<String>();
+            //Langauges = new ObservableCollection<String>();
+            Langauges = new ObservableCollection<Langdef>(SearchInput.LangList as List<Langdef>);
             CurrentSelected = new ItemList();
             subs = new OpenSubtitlesAPI();
         }
@@ -71,13 +72,15 @@ namespace subsl
                         {
                             Subtitles.Add(item);
                             FeatureType.Add(item.attributes.feature_details.feature_type);
-                            Langauges.Add(item.attributes.language);
+                            //Langauges.Add(item.attributes.language);
                         }
 
                         sublist.ItemsSource = Subtitles;
                         FeatTypeCombo.ItemsSource = FeatureType.Distinct();
-                        LangTypeCombo.ItemsSource = Langauges.Distinct();
-                    }
+                    //LangTypeCombo.ItemsSource = Langauges.Distinct();
+
+                    LangTypeCombo.ItemsSource = Langauges;//.foeEach(x => x.language_code);
+                }
                     else
                     {
                         StatusBox.Text = "No Results Found.";
