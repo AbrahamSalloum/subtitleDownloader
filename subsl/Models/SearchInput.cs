@@ -80,7 +80,7 @@ namespace subsl.Models
             }
             List<YearType> yrs = new List<YearType>() { new YearType() { year = null, name = "Any" }, };
 
-            for(int? i = StartYr; i <= EndYr; i++)
+            for(int? i = EndYr; i >= StartYr; i--)
             {
 
                 yrs.Add(new YearType() { year = i.ToString(), name = i.ToString() });
@@ -97,6 +97,7 @@ namespace subsl.Models
         public static List<Langdef> LangList = new List<Langdef>()
         {
              new Langdef() { language_code= "", language_name= "Any" },
+             new Langdef() { language_code= "en", language_name= "English" },
              new Langdef() { language_code= "af", language_name= "Afrikaans" },
              new Langdef() { language_code= "sq", language_name= "Albanian" },
              new Langdef() { language_code= "ar", language_name= "Arabic" },
@@ -115,7 +116,7 @@ namespace subsl.Models
              new Langdef() { language_code= "cs", language_name= "Czech" },
              new Langdef() { language_code= "da", language_name= "Danish" },
              new Langdef() { language_code= "nl", language_name= "Dutch" },
-             new Langdef() { language_code= "en", language_name= "English" },
+             
              new Langdef() { language_code= "eo", language_name= "Esperanto" },
              new Langdef() { language_code= "et", language_name= "Estonian" },
              new Langdef() { language_code= "fi", language_name= "Finnish" },

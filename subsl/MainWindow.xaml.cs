@@ -187,9 +187,9 @@ namespace subsl
 
                 if (hash != "")
                 {
-                    SearchInput.Query["moviehash"] = hash;
+                    SearchInput.AddQuery("moviehash", hash);
                     SearchSubtitle();
-                    SearchInput.Query.Remove("moviehash");
+                    SearchInput.RemoveQuery("moviehash");
 
                 }
             }
