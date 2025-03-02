@@ -17,9 +17,11 @@ namespace subsl
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
 
-        public ObservableCollection<ItemList> Subtitles;
+        public ObservableCollection<ItemList> Subtitles { get; set; }
         public ObservableCollection<FeatureType> FeatureTypes { get; set; }
         public ObservableCollection<Langdef> Langauges { get; set; }
+
+        public ObservableCollection<YearType> Years { get; set; }
 
         private ItemList CurrentSelected;
         private OpenSubtitlesAPI subs;
@@ -33,6 +35,7 @@ namespace subsl
             Subtitles = new ObservableCollection<ItemList>();
             FeatureTypes = new ObservableCollection<FeatureType>(SearchInput.FeatureList as List<FeatureType>);
             Langauges = new ObservableCollection<Langdef>(SearchInput.LangList as List<Langdef>);
+            Years = new ObservableCollection<YearType>(SearchInput.Generateyears(null, null) as List<YearType>);
             CurrentSelected = new ItemList();
             subs = new OpenSubtitlesAPI();
         }
@@ -42,9 +45,10 @@ namespace subsl
 
             if (query != "")
             {
-                SearchInput.Query["type"] = feat;
-                SearchInput.Query["languages"] = lang;
-                SearchInput.Query["query"] = query;
+                SearchInput.AddQuery("type", feat);
+                SearchInput.AddQuery("languages", lang);
+                SearchInput.AddQuery("query", query);
+                SearchInput.AddQuery("year", year);
                 hash = null;
                 SearchSubtitle();
             }
@@ -72,9 +76,6 @@ namespace subsl
                     {
                         Subtitles.Add(item);
                     }
-
-                    sublist.ItemsSource = Subtitles;
-
                 }
                     else
                     {
@@ -145,7 +146,7 @@ namespace subsl
             {
 
                 StatusTxt = $"Downloading {CurrentSelected?.attributes?.subtitle_id}.";
-                dlinfo = await subs.RequestDownloadInfo(CurrentSelected?.attributes?.subtitle_id);
+                dlinfo = await subs.RequestDownloadInfo(CurrentSelected?.attributes?.files[0].file_id);
                 if (dlinfo != null)
                 {
                     saveFileDialog.FileName = $"{dlinfo.file_name}.{CurrentSelected?.attributes?.subtitle_id}.srt";
@@ -193,6 +194,10 @@ namespace subsl
                 }
             }
         }
+
+
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
 
         private string? _lang = "";
@@ -327,6 +332,20 @@ namespace subsl
             }
         }
 
+        private string? _year = null;
+        public string? year
+        {
+            get { return _year; }
+            set
+            {
+                if (_year != value)
+                {
+                    _year = value;
+                    NotifyPropertyChanged(nameof(year));
+                }
+            }
+        }
+
 
         private BitmapImage? _img;
         public BitmapImage? img
@@ -341,7 +360,6 @@ namespace subsl
                 }
             }
         }
-        public event PropertyChangedEventHandler? PropertyChanged;
 
         private void NotifyPropertyChanged(string propertyName)
         {

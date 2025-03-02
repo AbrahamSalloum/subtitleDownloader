@@ -26,20 +26,22 @@
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="4*"/>
-                <ColumnDefinition Width="4*"/>
-                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
-            <ComboBox  Name="FeatTypeCombo" Grid.Row="0" Grid.Column="0" ItemsSource="{Binding FeatureTypes}" DisplayMemberPath="name" SelectedValuePath="type" SelectedValue="{Binding feat}"></ComboBox>
-            <ComboBox Name="LangTypeCombo" Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Langauges}"   DisplayMemberPath="language_name" SelectedValuePath="language_code" SelectedValue="{Binding lang}" ></ComboBox>
-            <Button Grid.Row="0" Grid.Column="2" Click="OpenOptionsWindow">Options</Button>
+            <ComboBox  Name="FeatTypeCombo" Grid.Row="0" Grid.Column="0" ItemsSource="{Binding FeatureTypes}" DisplayMemberPath="name" SelectedValuePath="type" SelectedValue="{Binding feat}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></ComboBox>
+            <ComboBox Name="LangTypeCombo" Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Langauges}"   DisplayMemberPath="language_name" SelectedValuePath="language_code" SelectedValue="{Binding lang}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></ComboBox>
+            <ComboBox Name="YearsCombo" Grid.Row="0" Grid.Column="2" ItemsSource="{Binding Years}"  DisplayMemberPath="name" SelectedValuePath="year" SelectedValue="{Binding year}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></ComboBox>
+            <Button Grid.Row="0" Grid.Column="3" Click="OpenOptionsWindow">Options</Button>
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
-            <ListView Name="sublist" SelectionMode="Single" Grid.Row="0" Grid.Column="0" Margin="0 5" MouseDoubleClick="ListViewItem_MouseDoubleClick" MouseLeftButtonUp="ListViewItem_MouseClick">
+            <ListView Name="sublist" SelectionMode="Single" Grid.Row="0" Grid.Column="0" Margin="0 5" MouseDoubleClick="ListViewItem_MouseDoubleClick" MouseLeftButtonUp="ListViewItem_MouseClick" ItemsSource="{Binding Subtitles}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Title" Width="120" DisplayMemberBinding="{Binding attributes.files[0].file_name}" />

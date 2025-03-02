@@ -4,13 +4,4 @@
              xmlns:local="clr-namespace:subsl"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              StartupUri="MainWindow.xaml">
-    <Application.Resources>
-        <x:Array x:Key="AcceptValue" Type="sys:String">
-            <sys:String>include</sys:String>
-            <sys:String>exclude</sys:String>
-        </x:Array>
-
-    </Application.Resources>
-    
-    
 </Application>

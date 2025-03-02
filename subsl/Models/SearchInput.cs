@@ -1,4 +1,10 @@
 ﻿
+using System.ComponentModel;
+using System.Security.Policy;
+using System.Windows;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+
 namespace subsl.Models
 {
     public static class SearchInput
@@ -35,9 +41,17 @@ namespace subsl.Models
             
         }
 
-        public static void AddQuery(string key, object value)
+        public static void AddQuery(string key, object? value)
         {
-            Query[key] = value;
+            if(Query.ContainsKey(key))
+            {
+                Query.Remove(key);
+            }
+            if(value != null)
+            {
+                Query.Add(key, value);
+            }
+                
         }
 
         public static void RemoveQuery(string key)
@@ -51,6 +65,34 @@ namespace subsl.Models
             new FeatureType() { type = "Movie", name = "Movie" },
             new FeatureType() { type = "Episode", name = "Episode" }
         };
+
+
+        public static List<YearType> Generateyears(int? StartYr, int? EndYr)
+        {
+            if(EndYr == null)
+            {
+                EndYr = (DateTime.Now.Year + 1);
+            }
+
+            if (StartYr == null)
+            {
+                StartYr = 1900; 
+            }
+            List<YearType> yrs = new List<YearType>() { new YearType() { year = null, name = "Any" }, };
+
+            for(int? i = StartYr; i <= EndYr; i++)
+            {
+
+                yrs.Add(new YearType() { year = i.ToString(), name = i.ToString() });
+            }
+
+            return yrs;
+        }
+        
+
+        
+
+
 
         public static List<Langdef> LangList = new List<Langdef>()
         {
@@ -142,4 +184,16 @@ namespace subsl.Models
         public string? type { get; set; }
         public string? name { get; set; }
     }
+
+    public class  YearType 
+    {
+
+        public string? year { get; set; }
+        public string? name { get; set; }
+
+    }
+
+
 }
+
+

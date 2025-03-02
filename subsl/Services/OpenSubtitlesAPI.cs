@@ -86,14 +86,14 @@ namespace subsl.Services
         }
 
 
-        public async Task<DownloadLinkInfo?> RequestDownloadInfo(string? SubId)
+        public async Task<DownloadLinkInfo?> RequestDownloadInfo(int? SubId)
         {
             if(SubId == null)
             {
                 return null;
             }
-            int SubIdInt = Int32.Parse(SubId);
-            string BodyText = $"{{\n  \"file_id\": {SubIdInt}\n}}";
+            
+            string BodyText = $"{{\n  \"file_id\": {SubId}\n}}";
 
             var request = new HttpRequestMessage
             {
