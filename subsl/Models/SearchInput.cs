@@ -66,33 +66,32 @@ namespace subsl.Models
             new FeatureType() { type = "Episode", name = "Episode" }
         };
 
-
-        public static List<YearType> Generateyears(int? StartYr, int? EndYr)
+        public static List<YearType> Generateyears(int StartYr, int EndYr)
         {
-            if(EndYr == null)
-            {
-                EndYr = (DateTime.Now.Year + 1);
-            }
-
-            if (StartYr == null)
-            {
-                StartYr = 1900; 
-            }
             List<YearType> yrs = new List<YearType>() { new YearType() { year = null, name = "Any" }, };
 
             for(int? i = EndYr; i >= StartYr; i--)
             {
-
                 yrs.Add(new YearType() { year = i.ToString(), name = i.ToString() });
             }
 
             return yrs;
         }
-        
 
-        
+        public static List<YearType> Generateyears()
+        {
+            int EndYr = (DateTime.Now.Year + 1);
+            int StartYr = 1900; 
 
+            List<YearType> yrs = new List<YearType>() { new YearType() { year = null, name = "Any" }, };
 
+            for (int? i = EndYr; i >= StartYr; i--)
+            {
+                yrs.Add(new YearType() { year = i.ToString(), name = i.ToString() });
+            }
+
+            return yrs;
+        }
 
         public static List<Langdef> LangList = new List<Langdef>()
         {
@@ -116,7 +115,6 @@ namespace subsl.Models
              new Langdef() { language_code= "cs", language_name= "Czech" },
              new Langdef() { language_code= "da", language_name= "Danish" },
              new Langdef() { language_code= "nl", language_name= "Dutch" },
-             
              new Langdef() { language_code= "eo", language_name= "Esperanto" },
              new Langdef() { language_code= "et", language_name= "Estonian" },
              new Langdef() { language_code= "fi", language_name= "Finnish" },
@@ -188,12 +186,9 @@ namespace subsl.Models
 
     public class  YearType 
     {
-
         public string? year { get; set; }
         public string? name { get; set; }
-
     }
-
 
 }
 

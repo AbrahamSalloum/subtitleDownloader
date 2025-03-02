@@ -16,6 +16,7 @@ namespace subsl.Models
         public string message { get; set; }
         public string reset_time { get; set; }
         public DateTime reset_time_utc { get; set; }
+
     }
 
 }

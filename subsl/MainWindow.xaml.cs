@@ -35,9 +35,11 @@ namespace subsl
             Subtitles = new ObservableCollection<ItemList>();
             FeatureTypes = new ObservableCollection<FeatureType>(SearchInput.FeatureList as List<FeatureType>);
             Langauges = new ObservableCollection<Langdef>(SearchInput.LangList as List<Langdef>);
-            Years = new ObservableCollection<YearType>(SearchInput.Generateyears(null, null) as List<YearType>);
+            Years = new ObservableCollection<YearType>(SearchInput.Generateyears() as List<YearType>);
             CurrentSelected = new ItemList();
             subs = new OpenSubtitlesAPI();
+
+
         }
 
         private void SearchText(object sender, RoutedEventArgs e)
@@ -56,32 +58,24 @@ namespace subsl
         private async void SearchSubtitle()
         {
 
-            if(LoggedIn == false)
-            {
-                StatusTxt = "Logging In...";
-                await subs.Login();
-                LoggedIn = true; 
-            }
-            
-
             if (subs != null)
             {
                 StatusTxt = "Searching...";
                 SearchResults SubtitleSearchResults = await subs.Search(SearchInput.Query);
 
-                    if (SubtitleSearchResults?.data != null)
-                    {
+                if (SubtitleSearchResults?.data != null)
+                {
                     Subtitles.Clear();
                     foreach (var item in SubtitleSearchResults.data)
                     {
                         Subtitles.Add(item);
                     }
                 }
-                    else
-                    {
+                else
+                {
                     StatusTxt = "No Results Found.";
-                        return;
-                    }
+                    return;
+                }
             }
 
             StatusTxt = null;
@@ -92,7 +86,7 @@ namespace subsl
             CurrentSelected = listView?.SelectedItem as ItemList;
             Debug.WriteLine(CurrentSelected?.attributes?.url);
             MessageBox.Show("Nothing.");
-            
+
         }
         private void ListViewItem_MouseClick(object sender, System.Windows.Input.MouseButtonEventArgs? e)
         {
@@ -108,8 +102,9 @@ namespace subsl
                 {
                     img = new BitmapImage(new Uri(imgurl));
                 }
-                
-            } else
+
+            }
+            else
             {
                 PosterStatus = "No Poster Found.";
             }
@@ -125,12 +120,12 @@ namespace subsl
                 movieimdb_id = CurrentSelected.attributes.feature_details.imdb_id.ToString();
             }
 
-            movieyear = null; 
+            movieyear = null;
             if (CurrentSelected?.attributes?.feature_details?.year != null)
             {
                 movieyear = CurrentSelected.attributes.feature_details.year.ToString();
             }
-                
+
         }
         private async void DownLoadSub_Click(object sender, RoutedEventArgs e)
         {
@@ -139,7 +134,7 @@ namespace subsl
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.DefaultExt = "srt";
             saveFileDialog.Filter = "Subtitles (*.srt)|*.srt|All files (*.*)|*.*";
-            
+
 
 
             if (CurrentSelected?.attributes?.subtitle_id != null)
@@ -156,16 +151,25 @@ namespace subsl
                     MessageBox.Show("No Download Link Found.");
                     return;
                 }
-                } else
+            }
+            else
             {
 
                 MessageBox.Show("No Subtitle Selected.");
                 return;
             }
 
+            if (dlinfo.message == "error")
+            {
+                LoginWindow login = new LoginWindow();
+                login.ShowDialog();
+                await subs.Login();
+                return;
+            }
+
             if (saveFileDialog.ShowDialog() == true)
             {
-                
+
                 await subs.DownloadSubtitle(dlinfo.link, saveFileDialog.FileName);
                 StatusTxt = "";
             }

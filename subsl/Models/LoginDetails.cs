@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace subsl.Models
 {
-        public class LoginInput
+        public static class LoginInput
         {
-            public string username { get; set; }
-            public string password { get; set; }
-            public string apikey { get; set; }
+            public static string username { get; set; }
+            public static string password { get; set; }
+            public static string apikey { get; set; }
 
 
         }

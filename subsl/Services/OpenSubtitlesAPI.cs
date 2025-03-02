@@ -16,38 +16,36 @@ namespace subsl.Services
         private static string? _token;
         private static string _BaseURL = "api.opensubtitles.com";
 
-        private static string? _ApiKey;
-        private static string? _UserName;
-        private static string? _Password;
-
+        //private static string? _ApiKey;
+        //private static string? _UserName;
+        //private static string? _Password;
 
         public OpenSubtitlesAPI()
         {
-            LoginInput? cred;
-            using (StreamReader r = new StreamReader("./cred.json"))
-            {
-                string file = r.ReadToEnd();
-                cred = JsonSerializer.Deserialize<LoginInput>(file);
-            }
 
-            if(cred == null)
-            {
-                throw new Exception("Invalid Credentials");
-            }
-
-            _ApiKey = cred.apikey;
-            _UserName = cred.username;
-            _Password = cred.password;
+            //_ApiKey = LoginInput.apikey;
+            //_UserName = LoginInput.username;
+            //_Password = LoginInput.password;
         }
 
         public async Task<LoginOutput?> Login()
         {
             HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, "https://api.opensubtitles.com/api/v1/login");
+            if(Properties.Settings.Default.token != "" && Properties.Settings.Default.token != null)
+            {
+                return null;
+            }
 
-            msg.Headers.Add("Api-key", $"{_ApiKey}");
+            if(LoginInput.username == null || LoginInput.password == null)
+            {
+                return null; 
+            }
+
+
+
+            msg.Headers.Add("Api-key", $"{LoginInput.apikey}");
             msg.Headers.Add("User-Agent", "a123");
-
-            msg.Content = new StringContent($"{{\r\n  \"username\": \"{_UserName}\",\r\n  \"password\": \"{_Password}\"\r\n}}", Encoding.UTF8, "application/json");
+            msg.Content = new StringContent($"{{\r\n  \"username\": \"{LoginInput.username}\",\r\n  \"password\": \"{LoginInput.password}\"\r\n}}", Encoding.UTF8, "application/json");
             var response = await _HttpClient.SendAsync(msg);
             response.EnsureSuccessStatusCode();
             var logininfo = await response.Content.ReadFromJsonAsync<LoginOutput>();
@@ -57,8 +55,10 @@ namespace subsl.Services
             }
 
             _token = logininfo.token;
+            Properties.Settings.Default.token = _token;
+            Properties.Settings.Default.Save();
             _BaseURL = logininfo.base_url;
-            Debug.WriteLine($"Token: {_token}");
+            
             return logininfo;
         }
 
@@ -79,12 +79,11 @@ namespace subsl.Services
             HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Get, $"https://{_BaseURL}/api/v1/subtitles?{qqueryparam}");
 
             msg.Headers.Add("User-Agent", $"a123");
-            msg.Headers.Add("Api-key", $"{_ApiKey}");
+            msg.Headers.Add("Api-key", $"{LoginInput.apikey}");
 
             var response = await _HttpClient.SendAsync(msg);
             return await response.Content.ReadFromJsonAsync<SearchResults?>();
         }
-
 
         public async Task<DownloadLinkInfo?> RequestDownloadInfo(int? SubId)
         {
@@ -102,7 +101,7 @@ namespace subsl.Services
                 Headers =
                     {
                         { "User-Agent", "a123" },
-                        {"Api-Key", $"{_ApiKey}" },
+                        {"Api-Key", $"{LoginInput.apikey}" },
                         { "Accept", "application/json" },
                         { "Authorization", $"Bearer {_token}"}
                         
@@ -115,7 +114,11 @@ namespace subsl.Services
             if (!response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                throw new HttpRequestException($"Request failed with status code {response.StatusCode}. Content: {content}");
+                Properties.Settings.Default.token = null;
+                Properties.Settings.Default.Save();
+
+                return new DownloadLinkInfo() { message = "error"};
+
             }
 
             DownloadLinkInfo? DownloadInfo = await response.Content.ReadFromJsonAsync<DownloadLinkInfo>();
