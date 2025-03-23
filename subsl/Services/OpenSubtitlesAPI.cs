@@ -1,12 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using subsl.Models;
-using System.Text.Json;
-using System.Net.Http.Headers;
-using System.Diagnostics;
 
 namespace subsl.Services
 {
@@ -18,16 +14,12 @@ namespace subsl.Services
 
         public OpenSubtitlesAPI()
         {
-
+            _token =  subsl.Properties.Settings.Default.token;
         }
 
         public async Task<LoginOutput?> Login()
         {
             HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, "https://api.opensubtitles.com/api/v1/login");
-            if(Properties.Settings.Default.token != "" && Properties.Settings.Default.token != null)
-            {
-                return null;
-            }
 
             if(LoginInput.username == null || LoginInput.password == null)
             {
@@ -48,8 +40,9 @@ namespace subsl.Services
             }
 
             _token = logininfo.token;
-            Properties.Settings.Default.token = _token;
-            Properties.Settings.Default.Save();
+
+            subsl.Properties.Settings.Default.token = _token;
+            
             _BaseURL = logininfo.base_url;
             
             return logininfo;
@@ -87,28 +80,22 @@ namespace subsl.Services
             
             string BodyText = $"{{\n  \"file_id\": {SubId}\n}}";
 
-            var request = new HttpRequestMessage
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, $"https://{_BaseURL}/api/v1/download");
+            request.Headers.Add("Api-key", $"{LoginInput.apikey}");
+            request.Headers.Add("User-Agent", "a123");
+            request.Headers.Add("Accept", "application/json");
+            if(_token != null)
             {
-                Method = HttpMethod.Post,
-                RequestUri = new Uri($"https://{_BaseURL}/api/v1/download"),
-                Headers =
-                    {
-                        { "User-Agent", "a123" },
-                        {"Api-Key", $"{LoginInput.apikey}" },
-                        { "Accept", "application/json" },
-                        { "Authorization", $"Bearer {_token}"}
-                        
-                    },
-                Content = new StringContent(BodyText, Encoding.UTF8, "application/json")
-            };
-
+                request.Headers.Add("Authorization", $"Bearer {_token}");
+            }
+            request.Content = new StringContent(BodyText, Encoding.UTF8, "application/json");
             var response = await _HttpClient.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                Properties.Settings.Default.token = null;
-                Properties.Settings.Default.Save();
+                //subsl.Properties.Settings.Default.token = null;
+                //subsl.Properties.Settings.Default.Save();
 
                 return new DownloadLinkInfo() { message = "error"};
 
