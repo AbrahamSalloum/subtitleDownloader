@@ -10,7 +10,7 @@ namespace subsl.Models
         {
             public static string username { get; set; }
             public static string password { get; set; }
-            public static string apikey { get; set; }
+            public static string apikey = "TysOzs9PT8JdKBx1srl3QQMcrMAoPBm3";
 
 
         }

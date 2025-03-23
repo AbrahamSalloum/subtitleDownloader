@@ -11,7 +11,7 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" Margin="10">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
@@ -28,7 +28,7 @@
                         <PasswordBox Name="PasswordBox" />
                     </StackPanel>
                     <StackPanel >
-                        <TextBlock Text="Consumer Key" />
+                        <TextBlock Text="Consumer Key. Don't change this unless you know why." />
                         <TextBox  Name="ConsumerKeyBox" Text="TysOzs9PT8JdKBx1srl3QQMcrMAoPBm3"/>
                     </StackPanel>
                 </StackPanel>

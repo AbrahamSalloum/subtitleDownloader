@@ -16,16 +16,9 @@ namespace subsl.Services
         private static string? _token;
         private static string _BaseURL = "api.opensubtitles.com";
 
-        //private static string? _ApiKey;
-        //private static string? _UserName;
-        //private static string? _Password;
-
         public OpenSubtitlesAPI()
         {
 
-            //_ApiKey = LoginInput.apikey;
-            //_UserName = LoginInput.username;
-            //_Password = LoginInput.password;
         }
 
         public async Task<LoginOutput?> Login()
