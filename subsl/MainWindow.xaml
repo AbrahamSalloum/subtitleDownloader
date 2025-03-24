@@ -41,7 +41,7 @@
                 <ColumnDefinition Width="10*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
-            <ListView Name="sublist" SelectionMode="Single" Grid.Row="0" Grid.Column="0" Margin="0 5" MouseDoubleClick="ListViewItem_MouseDoubleClick" MouseLeftButtonUp="ListViewItem_MouseClick" ItemsSource="{Binding Subtitles}">
+            <ListView Name="sublist" SelectionMode="Single" Grid.Row="0" Grid.Column="0" Margin="0 5" MouseLeftButtonUp="ListViewItem_MouseClick" ItemsSource="{Binding Subtitles}" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Title" Width="120" DisplayMemberBinding="{Binding attributes.files[0].file_name}" />
