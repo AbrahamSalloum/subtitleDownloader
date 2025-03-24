@@ -26,14 +26,13 @@ namespace subsl.Services
                 return null; 
             }
 
-
-
             msg.Headers.Add("Api-key", $"{LoginInput.apikey}");
             msg.Headers.Add("User-Agent", "a123");
             msg.Content = new StringContent($"{{\r\n  \"username\": \"{LoginInput.username}\",\r\n  \"password\": \"{LoginInput.password}\"\r\n}}", Encoding.UTF8, "application/json");
             var response = await _HttpClient.SendAsync(msg);
             response.EnsureSuccessStatusCode();
             var logininfo = await response.Content.ReadFromJsonAsync<LoginOutput>();
+
             if (logininfo == null)
             {
                 return null;
@@ -94,11 +93,7 @@ namespace subsl.Services
             if (!response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                //subsl.Properties.Settings.Default.token = null;
-                //subsl.Properties.Settings.Default.Save();
-
                 return new DownloadLinkInfo() { message = "error"};
-
             }
 
             DownloadLinkInfo? DownloadInfo = await response.Content.ReadFromJsonAsync<DownloadLinkInfo>();

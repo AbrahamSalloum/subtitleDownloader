@@ -71,7 +71,7 @@
         </Grid>
         <Grid Grid.Row="1">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Width="100">OK</Button>
+                <Button Width="100" Click="OK_Click">OK</Button>
                 <Button Width="100" Click="Cancel_Click">Cancel</Button>
             </StackPanel>
         </Grid>

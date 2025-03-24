@@ -39,5 +39,10 @@ namespace subsl
         {
             this.Close();
         }
+
+        private void OK_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
