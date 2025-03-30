@@ -12,12 +12,9 @@ using System.Windows.Data;
 
 namespace subsl
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-
+        private int page = 1;
         public ObservableCollection<ItemList> Subtitles { get; set; }
         public ObservableCollection<FeatureType> FeatureTypes { get; set; }
         public ObservableCollection<Langdef> Langauges { get; set; }
@@ -48,9 +45,9 @@ namespace subsl
 
         private void SearchText(object sender, RoutedEventArgs e)
         {
-
             if (query != "")
             {
+                page = 1; // Reset Page
                 SearchInput.AddQuery("type", feat);
                 SearchInput.AddQuery("languages", lang);
                 SearchInput.AddQuery("query", query);
@@ -59,7 +56,7 @@ namespace subsl
                 SearchSubtitle();
             }
         }
-        private async void SearchSubtitle()
+        private async void SearchSubtitle(Boolean Add = false)
         {
 
             if (subs != null)
@@ -69,7 +66,8 @@ namespace subsl
 
                 if (SubtitleSearchResults?.data != null)
                 {
-                    Subtitles.Clear();
+                    if(Add == false)
+                        Subtitles.Clear();
                     foreach (var item in SubtitleSearchResults.data)
                     {
                         Subtitles.Add(item);
@@ -430,6 +428,20 @@ namespace subsl
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            ScrollViewer scrollViewer = sender as ScrollViewer;
+
+            if (scrollViewer != null && scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
+            {
+                // User has scrolled to the end of the list
+                //MessageBox.Show("You've reached the end of the list!");
+                StatusTxt = "Loading More Results.";
+                SearchInput.AddQuery("page", page++);
+                SearchSubtitle(true);
             }
         }
 
