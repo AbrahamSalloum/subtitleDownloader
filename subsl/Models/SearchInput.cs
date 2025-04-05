@@ -59,6 +59,19 @@ namespace subsl.Models
             Query.Remove(key);
         }
 
+        public static object GetQueryValue(string key)
+        {
+            object value;
+            if(Query.TryGetValue(key, out value))
+            {
+                return value;
+
+            } else
+            {
+                return "";
+            }
+        }
+
         public static List<FeatureType> FeatureList = new List<FeatureType>()
         {
             new FeatureType() { type= "all", name= "Any" },

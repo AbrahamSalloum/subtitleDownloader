@@ -55,7 +55,7 @@ namespace subsl
         }
 
 
-        private string? _ai_translatedV;
+        private string? _ai_translatedV = (string?)SearchInput.GetQueryValue("ai_translated");
         public string? ai_translatedV
         {
             get { return _ai_translatedV; }
@@ -69,7 +69,7 @@ namespace subsl
             }
         }
 
-        private string? _machine_translatedV;
+        private string? _machine_translatedV = (string?)SearchInput.GetQueryValue("machine_translated");
         public string? machine_translatedV
         {
             get { return _machine_translatedV; }
@@ -83,7 +83,7 @@ namespace subsl
             }
         }
 
-        private string? _foreign_parts_onlyV;
+        private string? _foreign_parts_onlyV = (string?)SearchInput.GetQueryValue("foreign_parts_only");
         public string? foreign_parts_onlyV
         {
             get { return _foreign_parts_onlyV; }

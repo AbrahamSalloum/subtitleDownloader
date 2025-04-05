@@ -67,6 +67,11 @@ namespace subsl.Services
             msg.Headers.Add("Api-key", $"{LoginInput.apikey}");
 
             var response = await _HttpClient.SendAsync(msg);
+            if(!response.IsSuccessStatusCode)
+            {
+                
+                return null;
+            }
             return await response.Content.ReadFromJsonAsync<SearchResults?>();
         }
 
