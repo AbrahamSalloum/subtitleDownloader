@@ -23,24 +23,24 @@
                 <StackPanel Grid.Row="0">
                     <StackPanel >
                         <TextBlock Text="AI Translated" />
-                        <ComboBox  Name="ai_translated" ItemsSource="{Binding OptionsWithOutOnly}">
+                        <ComboBox  Name="ai_translated" ItemsSource="{Binding OptionsWithOutOnly}" SelectedValue="{Binding ai_translatedV}">
                         </ComboBox>
                     </StackPanel >
 
                     <StackPanel>
                         <TextBlock Text="Machine Translated" />
-                        <ComboBox  Name="machine_translated" ItemsSource="{Binding OptionsWithOutOnly}"/>
+                        <ComboBox  Name="machine_translated" ItemsSource="{Binding OptionsWithOutOnly}" SelectedValue="{Binding machine_translatedV}"/>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Grid.Row="1">
                     <StackPanel>
                         <TextBlock Text="Foreign Parts Only" />
-                    <ComboBox  Name="foreign_parts_only" ItemsSource="{Binding OptionsWithOnly}">
+                        <ComboBox  Name="foreign_parts_only" ItemsSource="{Binding OptionsWithOnly}" SelectedValue="{Binding foreign_parts_onlyV}">
                     </ComboBox>
                     </StackPanel>
                     <StackPanel>
                     <TextBlock Text="Hearing Impaired" />
-                    <ComboBox  Name="hearing_impaired" ItemsSource="{Binding OptionsWithOnly}" >
+                        <ComboBox  Name="hearing_impaired" ItemsSource="{Binding OptionsWithOnly}" SelectedValue="{Binding hearing_impairedV}">
                     </ComboBox>
                     </StackPanel>
                 </StackPanel>
