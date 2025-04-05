@@ -21,11 +21,11 @@ namespace subsl
 
         public ObservableCollection<YearType> Years { get; set; }
 
-        private ItemList CurrentSelected;
+        private ItemList? CurrentSelected;
         private OpenSubtitlesAPI subs;
         private bool LoggedIn = false;
 
-        GridViewColumnHeader _lastHeaderClicked = null;
+        GridViewColumnHeader? _lastHeaderClicked = null;
         ListSortDirection _lastDirection = ListSortDirection.Ascending;
 
         public MainWindow()
@@ -57,26 +57,26 @@ namespace subsl
         private async void SearchSubtitle(Boolean Add = false)
         {
 
-            if (subs != null)
-            {
                 StatusTxt = "Searching...";
-                SearchResults SubtitleSearchResults = await subs.Search(SearchInput.Query);
+                SearchResults? SubtitleSearchResults = await subs.Search(SearchInput.Query);
 
                 if (SubtitleSearchResults?.data != null)
                 {
                     if(Add == false)
+                    {
                         Subtitles.Clear();
+                    }
+                      
                     foreach (var item in SubtitleSearchResults.data)
                     {
                         Subtitles.Add(item);
                     }
-                }
+                } 
                 else
                 {
                     StatusTxt = "No Results Found.";
                     return;
                 }
-            }
 
             StatusTxt = null;
         }
@@ -127,8 +127,6 @@ namespace subsl
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.DefaultExt = "srt";
             saveFileDialog.Filter = "Subtitles (*.srt)|*.srt|All files (*.*)|*.*";
-
-
 
             if (CurrentSelected?.attributes?.subtitle_id != null)
             {
@@ -191,9 +189,7 @@ namespace subsl
                 }
             }
         }
-
-        void GridViewColumnHeaderClickedHandler(object sender,
-                                                RoutedEventArgs e)
+        void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
         {
             var headerClicked = e.OriginalSource as GridViewColumnHeader;
             ListSortDirection direction;
@@ -247,7 +243,7 @@ namespace subsl
         }
 
 
-        private void Sort(string sortBy, ListSortDirection direction)
+        private void Sort(string? sortBy, ListSortDirection direction)
         {
             ICollectionView dataView =
               CollectionViewSource.GetDefaultView(sublist.ItemsSource);
@@ -431,12 +427,10 @@ namespace subsl
 
         private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            ScrollViewer scrollViewer = sender as ScrollViewer;
+            ScrollViewer? scrollViewer = sender as ScrollViewer;
 
             if (scrollViewer != null && scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
             {
-                // User has scrolled to the end of the list
-                //MessageBox.Show("You've reached the end of the list!");
                 StatusTxt = "Loading More Results.";
                 SearchInput.AddQuery("page", page++);
                 SearchSubtitle(true);

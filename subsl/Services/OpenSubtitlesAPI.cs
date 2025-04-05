@@ -60,7 +60,6 @@ namespace subsl.Services
                 qqueryparam += $"&{item.Key}={item.Value}";
             }
 
-
             HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Get, $"https://{_BaseURL}/api/v1/subtitles?{qqueryparam}");
 
             msg.Headers.Add("User-Agent", $"a123");
