@@ -59,7 +59,7 @@ namespace subsl.Models
             Query.Remove(key);
         }
 
-        public static object GetQueryValue(string key)
+        public static object? GetQueryValue(string key)
         {
             object value;
             if(Query.TryGetValue(key, out value))
@@ -68,7 +68,7 @@ namespace subsl.Models
 
             } else
             {
-                return "";
+                return null;
             }
         }
 

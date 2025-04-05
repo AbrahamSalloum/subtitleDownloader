@@ -47,24 +47,22 @@
 
                 <StackPanel Grid.Row="2" >
                     <StackPanel>
-                <TextBlock Text="IMDb ID" />
-                <TextBox  Name="imdb_id" />
+                        <TextBlock Text="IMDb ID" />
+                        <TextBox  Name="imdb_id" Text="{Binding imdb_idV}"/>
                     </StackPanel>
                     <StackPanel>
-                    <TextBlock Text="TMDB  ID" />
-                <TextBox  Name="tmdb_id" />
-                        </StackPanel>
+                        <TextBlock Text="TMDB  ID" />
+                        <TextBox  Name="tmdb_id" Text="{Binding tmdb_idV}" />
+                    </StackPanel>
                 </StackPanel>
-
-
                 <StackPanel Grid.Row="4">
                     <StackPanel>
                     <TextBlock Text="Season Number" />
-                <TextBox  Name="season_number" />
+                        <TextBox  Name="season_number" Text="{Binding season_numberV}"/>
                     </StackPanel>
                     <StackPanel>
-                        <TextBlock Text="Episode Number" />
-                <TextBox  Name="episode_number" />
+                      <TextBlock Text="Episode Number" />
+                        <TextBox  Name="episode_number" Text="{Binding episode_numberV}"/>
                     </StackPanel>
                 </StackPanel>
             </Grid>
