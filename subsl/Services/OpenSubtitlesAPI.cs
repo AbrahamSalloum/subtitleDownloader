@@ -47,20 +47,10 @@ namespace subsl.Services
             return logininfo;
         }
 
-        public async Task<SearchResults?> Search(Dictionary<string, object>? SearchBoxInput)
+        public async Task<SearchResults?> Search()
         {
 
-            if(SearchBoxInput == null)
-            {
-                return null;
-            }
-            string qqueryparam = "";
-            foreach (var item in SearchBoxInput)
-            {
-                qqueryparam += $"&{item.Key}={item.Value}";
-            }
-
-            HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Get, $"https://{_BaseURL}/api/v1/subtitles?{qqueryparam}");
+            HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Get, $"https://{_BaseURL}/api/v1/subtitles?{SearchInput.qqueryparam}");
 
             msg.Headers.Add("User-Agent", $"a123");
             msg.Headers.Add("Api-key", $"{LoginInput.apikey}");

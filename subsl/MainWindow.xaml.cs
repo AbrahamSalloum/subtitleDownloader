@@ -24,6 +24,7 @@ namespace subsl
         private ItemList? CurrentSelected;
         private OpenSubtitlesAPI subs;
         private bool LoggedIn = false;
+        private bool hasResults = false;
 
         GridViewColumnHeader? _lastHeaderClicked = null;
         ListSortDirection _lastDirection = ListSortDirection.Ascending;
@@ -56,12 +57,13 @@ namespace subsl
         }
         private async void SearchSubtitle(Boolean Add = false)
         {
-
-                StatusTxt = "Searching...";
-                SearchResults? SubtitleSearchResults = await subs.Search(SearchInput.Query);
-
-                if (SubtitleSearchResults?.data != null)
+            OptionsText = SearchInput.qqueryparam;
+            StatusTxt = "Searching...";
+            SearchResults? SubtitleSearchResults = await subs.Search();
+            
+            if (SubtitleSearchResults?.data != null)
                 {
+                    hasResults = true; 
                     if(Add == false)
                     {
                         Subtitles.Clear();
@@ -74,7 +76,8 @@ namespace subsl
                 } 
                 else
                 {
-                    StatusTxt = "No Results Found.";
+                hasResults = false;
+                StatusTxt = "No Results Found.";
                     return;
                 }
 
@@ -118,11 +121,9 @@ namespace subsl
             {
                 movieyear = CurrentSelected.attributes.feature_details.year.ToString();
             }
-
         }
         private async void DownLoadSub_Click(object sender, RoutedEventArgs e)
         {
-
             DownloadLinkInfo? dlinfo;
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.DefaultExt = "srt";
@@ -145,7 +146,6 @@ namespace subsl
             }
             else
             {
-
                 MessageBox.Show("No Subtitle Selected.");
                 return;
             }
@@ -160,7 +160,6 @@ namespace subsl
 
             if (saveFileDialog.ShowDialog() == true)
             {
-
                 await subs.DownloadSubtitle(dlinfo.link, saveFileDialog.FileName);
                 StatusTxt = "";
             }
@@ -241,8 +240,6 @@ namespace subsl
                 }
             }
         }
-
-
         private void Sort(string? sortBy, ListSortDirection direction)
         {
             ICollectionView dataView =
@@ -270,6 +267,20 @@ namespace subsl
             }
         }
 
+        private string? _OptionsText = "";
+        public string? OptionsText
+        {
+            get { return _OptionsText; }
+            set
+            {
+                if (_OptionsText != value)
+                {
+                    _OptionsText = value;
+                    NotifyPropertyChanged(nameof(OptionsText));
+                }
+            }
+        }
+
 
         private string? _StatusTxt;
         public string? StatusTxt
@@ -284,7 +295,6 @@ namespace subsl
                 }
             }
         }
-
 
         private string? _query;
         public string? query
@@ -313,7 +323,6 @@ namespace subsl
                 }
             }
         }
-
 
         private string? _hash;
         public string? hash
@@ -357,8 +366,6 @@ namespace subsl
             }
         }
 
-
-
         private string? _movieimdb_id;
         public string? movieimdb_id
         {
@@ -372,7 +379,6 @@ namespace subsl
                 }
             }
         }
-
 
         private string? _movieTitle;
         public string? movieTitle
@@ -402,7 +408,6 @@ namespace subsl
             }
         }
 
-
         private BitmapImage? _img;
         public BitmapImage? img
         {
@@ -429,13 +434,12 @@ namespace subsl
         {
             ScrollViewer? scrollViewer = sender as ScrollViewer;
 
-            if (scrollViewer != null && scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
+            if (hasResults && scrollViewer != null && scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
             {
                 StatusTxt = "Loading More Results.";
                 SearchInput.AddQuery("page", page++);
                 SearchSubtitle(true);
             }
         }
-
     }
 }

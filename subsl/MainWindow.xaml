@@ -53,7 +53,6 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-
             </ScrollViewer>
             <Grid Grid.Row="0" Grid.Column="1" Margin="5 " x:Name="panelside">
                 <TextBlock Name="MovieHashText" Text="{Binding hash}" />
@@ -80,7 +79,8 @@
             </Grid>
         </Grid>
         <Grid Grid.Row="3">
-            <TextBlock Name="StatusBox" Text="{Binding StatusTxt}"/>
+            <TextBlock Name="StatusBox" Text="{Binding StatusTxt}" HorizontalAlignment="Left"/>
+            <TextBlock Name="OptionsList" Text="{Binding OptionsText}" HorizontalAlignment="Right"/>
         </Grid>
     </Grid>
 </Window>

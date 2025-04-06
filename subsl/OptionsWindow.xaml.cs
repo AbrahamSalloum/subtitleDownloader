@@ -34,8 +34,8 @@ namespace subsl
         {
             InitializeComponent();
            
-             OptionsWithOnly = ["include", "exclude", "only"];
-             OptionsWithOutOnly = ["include", "exclude"];
+             OptionsWithOnly = ["", "include", "exclude", "only"];
+             OptionsWithOutOnly = ["", "include", "exclude"];
 
             DataContext = this;
         }
