@@ -34,8 +34,8 @@ namespace subsl
         {
             InitializeComponent();
            
-             OptionsWithOnly = ["", "include", "exclude", "only"];
-             OptionsWithOutOnly = ["", "include", "exclude"];
+            OptionsWithOnly = ["", "include", "exclude", "only"];
+            OptionsWithOutOnly = ["", "include", "exclude"];
 
             DataContext = this;
         }
@@ -57,7 +57,6 @@ namespace subsl
             SearchInput.AddQuery("season_number", season_numberV);
             this.Close();
         }
-
 
         private string? _episode_numberV = (string?)SearchInput.GetQueryValue("episode_number");
         public string? episode_numberV

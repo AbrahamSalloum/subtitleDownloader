@@ -55,7 +55,6 @@
                 </ListView>
             </ScrollViewer>
             <Grid Grid.Row="0" Grid.Column="1" Margin="5 " x:Name="panelside">
-                <TextBlock Name="MovieHashText" Text="{Binding hash}" />
                 <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" HorizontalAlignment="Center" >
                     <Grid Width="150" Background="silver" >
                         <Image Name="imgp" Source="{Binding img}"/>

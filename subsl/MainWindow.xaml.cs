@@ -23,7 +23,6 @@ namespace subsl
 
         private ItemList? CurrentSelected;
         private OpenSubtitlesAPI subs;
-        private bool LoggedIn = false;
         private bool hasResults = false;
 
         GridViewColumnHeader? _lastHeaderClicked = null;
@@ -76,8 +75,8 @@ namespace subsl
                 } 
                 else
                 {
-                hasResults = false;
-                StatusTxt = "No Results Found.";
+                    hasResults = false;
+                    StatusTxt = "No Results Found.";
                     return;
                 }
 
@@ -244,13 +243,14 @@ namespace subsl
         private void Sort(string? sortBy, ListSortDirection direction)
         {
             ICollectionView dataView =
-              CollectionViewSource.GetDefaultView(sublist.ItemsSource);
+            CollectionViewSource.GetDefaultView(sublist.ItemsSource);
 
             dataView.SortDescriptions.Clear();
             SortDescription sd = new SortDescription(sortBy, direction);
             dataView.SortDescriptions.Add(sd);
             dataView.Refresh();
         }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
 
