@@ -39,7 +39,10 @@ namespace subsl.Models
             SearchInput.qqueryparam = "";
             foreach (var item in Query)
             {
-                SearchInput.qqueryparam += $"&{item.Key}={item.Value}";
+                if (String.IsNullOrEmpty((string)item.Value) == false) 
+                {
+                    SearchInput.qqueryparam += $"&{item.Key}={item.Value}";
+                }
             }
         }
 
