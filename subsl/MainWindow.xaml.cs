@@ -97,6 +97,7 @@ namespace subsl
                 if (imgurl != null)
                 {
                     img = new BitmapImage(new Uri(imgurl));
+                    PosterStatus = null;
                 }
 
             }
