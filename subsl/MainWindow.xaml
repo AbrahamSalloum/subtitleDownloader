@@ -20,7 +20,11 @@
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Row="0" Grid.Column="0"  Name="searchBarInput" Width="Auto" VerticalContentAlignment="Center" Text="{Binding query}"/>
+            <TextBox Grid.Row="0" Grid.Column="0"  Name="searchBarInput" Width="Auto" VerticalContentAlignment="Center" Text="{Binding query, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Enter" Command="{Binding EnterCommand}"/>
+                </TextBox.InputBindings>
+            </TextBox>
             <Button Grid.Row="0" Grid.Column="1" Click="SearchMovieHash">File</Button>
             <Button Grid.Row="0" Grid.Column="2" Click="SearchText">Search</Button>
         </Grid>
@@ -36,13 +40,13 @@
             <ComboBox Name="YearsCombo" Grid.Row="0" Grid.Column="2" ItemsSource="{Binding Years}"  DisplayMemberPath="name" SelectedValuePath="year" SelectedValue="{Binding year}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></ComboBox>
             <Button Grid.Row="0" Grid.Column="3" Click="OpenOptionsWindow">Options</Button>
         </Grid>
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" Name="cont">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
-            <ScrollViewer ScrollChanged="ScrollViewer_ScrollChanged">
-                <ListView Name="sublist" SelectionMode="Single" Grid.Row="0" Grid.Column="0" Margin="0 5"  MouseLeftButtonUp="ListViewItem_MouseClick" ItemsSource="{Binding Subtitles}" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler"  >
+            <!-- <ScrollViewer  ScrollChanged="ScrollViewer_ScrollChanged" Height="{Binding ElementName=cont, Path=ActualHeight}"> -->
+                <ListView ScrollViewer.ScrollChanged="ScrollViewer_ScrollChanged" Name="sublist" SelectionMode="Single" Grid.Row="0" Grid.Column="0" Margin="0 5"  MouseLeftButtonUp="ListViewItem_MouseClick" ItemsSource="{Binding Subtitles}" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler"  >
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Title" Width="120" DisplayMemberBinding="{Binding attributes.files[0].file_name}" />
@@ -53,7 +57,7 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-            </ScrollViewer>
+            <!--   </ScrollViewer> -->
             <Grid Grid.Row="0" Grid.Column="1" Margin="5 " x:Name="panelside">
                 <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" HorizontalAlignment="Center" >
                     <Grid Width="150" Background="silver" >

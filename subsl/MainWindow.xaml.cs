@@ -8,6 +8,7 @@ using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using System.ComponentModel;
 using System.Windows.Data;
+using System.Windows.Input;
 
 
 namespace subsl
@@ -41,7 +42,7 @@ namespace subsl
             subs = new OpenSubtitlesAPI();
         }
 
-        private void SearchText(object sender, RoutedEventArgs e)
+        private void SearchText(object? sender, RoutedEventArgs? e)
         {
             if (query != "")
             {
@@ -252,7 +253,7 @@ namespace subsl
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-
+        
 
         private string? _lang = "";
         public string? lang
@@ -281,7 +282,6 @@ namespace subsl
                 }
             }
         }
-
 
         private string? _StatusTxt;
         public string? StatusTxt
@@ -433,14 +433,55 @@ namespace subsl
 
         private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            ScrollViewer? scrollViewer = sender as ScrollViewer;
 
-            if (hasResults && scrollViewer != null && scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
+            if (hasResults && e.VerticalChange != 0)
             {
-                StatusTxt = "Loading More Results.";
-                SearchInput.AddQuery("page", page++);
-                SearchSubtitle(true);
+                if (e.VerticalOffset + e.ViewportHeight == e.ExtentHeight)
+                {
+                    StatusTxt = "Loading More Results.";
+                    SearchInput.AddQuery("page", page++);
+                    SearchSubtitle(true);
+                }
+                else
+                {
+
+                }
             }
+        }
+
+        private void EnterKeyPress()
+        {
+            SearchText(null, null);
+        }
+
+        private ICommand _EnterCommand;
+        public ICommand EnterCommand
+        {
+            get
+            {
+                return _EnterCommand ?? (_EnterCommand = new CommandHandler(() => EnterKeyPress(), true));
+            }
+        }
+
+    }
+
+    public class CommandHandler : ICommand
+    {
+        private Action _action;
+        private bool _canExecute;
+        public CommandHandler(Action action, bool canExecute)
+        {
+            _action = action;
+            _canExecute = canExecute;
+        }
+        public bool CanExecute(object parameter)
+        {
+            return _canExecute;
+        }
+        public event EventHandler CanExecuteChanged;
+        public void Execute(object parameter)
+        {
+            _action();
         }
     }
 }
