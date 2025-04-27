@@ -64,7 +64,6 @@
                     </Grid>
                     <TextBlock Text="Movie: " />
                     <StackPanel Orientation="Horizontal">
-
                         <TextBlock Text="{Binding movieTitle}"   TextWrapping="WrapWithOverflow"  Width="{Binding ActualWidth, ElementName=panelside}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
