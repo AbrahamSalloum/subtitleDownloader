@@ -1,7 +1,10 @@
-﻿using subsl.Models;
-using System.Configuration;
-using System.Data;
+﻿
 using System.Windows;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using subsl.Models;
+using System.Text.RegularExpressions;
+
 
 namespace subsl
 {
@@ -13,7 +16,13 @@ namespace subsl
         private void Application_Startup(object sender, StartupEventArgs e)
         {
 
-            MpvInput.Filepath = e.Args[0];
+            if(e.Args.Length > 0)
+            {
+                var s = e.Args[0].Replace("\\", "\\\\");
+                var jsonObj = JsonNode.Parse(s).AsObject();
+                MpvInput.Filepath = jsonObj["filepath"].ToString();
+            }
+
         }
     }
 

@@ -40,6 +40,11 @@ namespace subsl
             CurrentSelected = new ItemList();
             subs = new OpenSubtitlesAPI();
 
+            if(MpvInput.Filepath != null)
+            {
+                MovieHashSearch(MpvInput.Filepath);
+            }
+
         }
 
         private void SearchText(object? sender, RoutedEventArgs? e)
@@ -177,17 +182,25 @@ namespace subsl
             if (openFileDialog.ShowDialog() == true)
             {
                 string filename = openFileDialog.FileName;
-                byte[] moviehash = MovieHash.ComputeMovieHash($"{filename}");
-                hash = MovieHash.ToHexadecimal(moviehash);
+                MovieHashSearch(filename);
 
-                if (hash != "")
-                {
-                    SearchInput.AddQuery("moviehash", hash);
-                    SearchSubtitle();
-                    SearchInput.RemoveQuery("moviehash");
-
-                }
             }
+        }
+
+        private void MovieHashSearch(string filename)
+        {
+
+            byte[] moviehash = MovieHash.ComputeMovieHash($"{filename}");
+            hash = MovieHash.ToHexadecimal(moviehash);
+
+            if (hash != "")
+            {
+                SearchInput.AddQuery("moviehash", hash);
+                SearchSubtitle();
+                SearchInput.RemoveQuery("moviehash");
+
+            }
+
         }
         void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
         {
