@@ -1,8 +1,7 @@
 {
   "profiles": {
     "subsl": {
-      "commandName": "Project",
-      "commandLineArgs": "\"{\r\n\\\"filepath\\\": \\\"X:\\public_html\\movies\\Yi Yi (2000) [1080p] [BluRay] [YTS.MX]\\Yi.Yi.2000.1080p.BluRay.x264.AAC-[YTS.MX].mp4\\\"\r\n}\""
+      "commandName": "Project"
     }
   }
 }

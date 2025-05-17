@@ -66,14 +66,14 @@ namespace subsl.Models
 
         public static List<FeatureType> FeatureList = new List<FeatureType>()
         {
-            new FeatureType() { type= "all", name= "Any" },
+            new FeatureType() { type= "all", name= "Type" },
             new FeatureType() { type = "Movie", name = "Movie" },
             new FeatureType() { type = "Episode", name = "Episode" }
         };
 
         public static List<YearType> Generateyears(int StartYr, int EndYr)
         {
-            List<YearType> yrs = new List<YearType>() { new YearType() { year = null, name = "Any" }, };
+            List<YearType> yrs = new List<YearType>() { new YearType() { year = null, name = "Year" }, };
 
             for(int? i = EndYr; i >= StartYr; i--)
             {
@@ -88,7 +88,7 @@ namespace subsl.Models
             int EndYr = (DateTime.Now.Year + 1);
             int StartYr = 1900; 
 
-            List<YearType> yrs = new List<YearType>() { new YearType() { year = null, name = "Any" }, };
+            List<YearType> yrs = new List<YearType>() { new YearType() { year = null, name = "Year" }, };
 
             for (int? i = EndYr; i >= StartYr; i--)
             {
@@ -100,7 +100,7 @@ namespace subsl.Models
 
         public static List<Langdef> LangList = new List<Langdef>()
         {
-             new Langdef() { language_code= "", language_name= "Any" },
+             new Langdef() { language_code= "", language_name= "Language" },
              new Langdef() { language_code= "en", language_name= "English" },
              new Langdef() { language_code= "af", language_name= "Afrikaans" },
              new Langdef() { language_code= "sq", language_name= "Albanian" },
