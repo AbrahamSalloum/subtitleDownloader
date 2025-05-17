@@ -94,4 +94,11 @@ namespace subsl.Models
         public string? file_name { get; set; }
     }
 
+
+     static class MpvInput
+    {
+        public static string Filepath { get; set; }
+
+    }
+
 }

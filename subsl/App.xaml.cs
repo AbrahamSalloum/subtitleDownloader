@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using subsl.Models;
+using System.Configuration;
 using System.Data;
 using System.Windows;
 
@@ -9,6 +10,11 @@ namespace subsl
     /// </summary>
     public partial class App : Application
     {
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+
+            MpvInput.Filepath = e.Args[0];
+        }
     }
 
 }

@@ -39,6 +39,7 @@ namespace subsl
             Years = new ObservableCollection<YearType>(SearchInput.Generateyears() as List<YearType>);
             CurrentSelected = new ItemList();
             subs = new OpenSubtitlesAPI();
+
         }
 
         private void SearchText(object? sender, RoutedEventArgs? e)
