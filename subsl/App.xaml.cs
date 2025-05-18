@@ -1,9 +1,9 @@
 ﻿
 using System.Windows;
-using System.Text.Json;
+using System.IO;
 using System.Text.Json.Nodes;
 using subsl.Models;
-using System.Text.RegularExpressions;
+
 
 
 namespace subsl
@@ -24,7 +24,24 @@ namespace subsl
                     {
                         if (jsonObj["filepath"] is not null)
                         {
-                            MpvInput.Filepath = jsonObj["filepath"]?.ToString();
+                            if (jsonObj["filepath"] is not null)
+                            {
+                                string filepath = jsonObj["filepath"].ToString();
+                                if (System.IO.File.Exists(filepath))
+                                {
+                                    MpvInput.Filepath = filepath;
+                                } else 
+                                {
+                                    MessageBox.Show("File not found: " + filepath, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    Environment.Exit(0);
+                                }
+
+                                if (jsonObj["filename"] is not null)
+                                {
+                                    MpvInput.Filename = jsonObj["filename"].ToString();
+                                }
+                            }
+                                
                         }
                        
                     }

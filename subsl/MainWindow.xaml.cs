@@ -43,6 +43,7 @@ namespace subsl
             if(MpvInput.Filepath != null)
             {
                 MovieHashSearch(MpvInput.Filepath);
+                query = MpvInput.Filename;
             }
 
         }
