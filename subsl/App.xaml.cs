@@ -16,9 +16,20 @@ namespace subsl
 
             if(e.Args.Length > 0)
             {
-                var s = e.Args[0].Replace("\\", "\\\\");
-                var jsonObj = JsonNode.Parse(s).AsObject();
-                MpvInput.Filepath = jsonObj["filepath"].ToString();
+                string s = e.Args[0].Replace("\\", "\\\\");
+                if(s is not null)
+                {
+                    JsonNode? jsonObj = JsonNode.Parse(s)?.AsObject();
+                    if(jsonObj is not null)
+                    {
+                        if (jsonObj["filepath"] is not null)
+                        {
+                            MpvInput.Filepath = jsonObj["filepath"]?.ToString();
+                        }
+                       
+                    }
+                }
+
             }
 
         }
